@@ -36,30 +36,14 @@ pixelady -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import Page from '../routes/+page.svelte';
+  import { flip } from 'svelte/animate';
+  import { dndzone } from 'svelte-dnd-action';
 
-  // text box on hover
-  let tooltipVisible = false;
-  let tooltipX = 0;
-  let tooltipY = 0;
-
-  function handleMouseOver(event: MouseEvent) {
-    tooltipVisible = true;
-    tooltipX = event.clientX;
-    tooltipY = event.clientY;
-  }
-
-  function handleMouseOut() {
-    tooltipVisible = false;
-  }
-
-  function handleMouseMove(event: MouseEvent) {
-    tooltipX = event.clientX;
-    tooltipY = event.clientY;
-  }
+  // task id
+  let idCounter = 0;
 
   // shuffle bg
-  let bgs: string[] = ['/images/notes.png', '/images/vroom.png'];
+  let bgs: string[] = ['/images/notes.png', '/images/forbidden.jpeg', '/images/vroom.png', '/images/shelby.webp'];
   let currentBgIndex: number = 0;
 
   function updateBackground(): void {
@@ -74,7 +58,7 @@ pixelady -->
     const interval = setInterval(() => {
       currentBgIndex = (currentBgIndex + 1) % bgs.length;
       updateBackground();
-    }, 60000); 
+    }, 6000); 
 
     //  clean function to clear the interval when the component is destroyed
     return () => {
@@ -88,8 +72,16 @@ pixelady -->
   let isHoveringCompleted: boolean[] = [];
 
   // Create a writable store to hold the list of todo items
-  const todoList = writable<{ text: string; completed: boolean; isHovering: boolean }[]>([]);
+  const todoList = writable<{ id: number; text: string; completed: boolean; isHovering: boolean }[]>([]);
   const completedList = writable<{ text: string }[]>([]);
+
+  const handleConsider = (event: any) => {
+    console.log("consider");
+  }
+
+  const handleFinalize = (event: any) => {
+    console.log("finalize");
+  }
 
   // Function to handle adding a new todo item
   function addTodoItem(event: Event) {
@@ -97,7 +89,7 @@ pixelady -->
     const todoInput = event.target as HTMLFormElement;
     const newTodo = todoInput.todo.value.trim();
     if (newTodo !== '') {
-      todoList.update(items => [...items, { text: newTodo, completed: false, isHovering: false }]);
+      todoList.update(items => [...items, { id: idCounter++, text: newTodo, completed: false, isHovering: false }]);
       todoInput.reset();
     }
   }
@@ -149,11 +141,20 @@ pixelady -->
   </form>
 
   {#if $todoList}
-    <ul class="glow space-y-2">
-      {#each $todoList as todo, index}
+  <container>
+    <ul 
+      class="space-y-2"
+      
+    >
+      {#each $todoList as todo, index (todo.id)}
 
-      <!-- complete item BUTTON -->
-        <li 
+        <li
+          
+    use:dndzone="{{ items: $todoList, flipDurationMs: 300 }}"
+    on:consider="{handleConsider}"
+    on:finalize="{handleFinalize}"
+  
+          animate:flip="{{duration: 1000}}"
           on:mouseover={() => todoList.update(items => {
             const updatedItems = [...items];
             updatedItems[index].isHovering = true;
@@ -175,6 +176,8 @@ pixelady -->
             return updatedItems;
           })}
           class="flex flex-row bg-oxblood bg-opacity-75 shadow-md rounded-md">
+
+<!-- complete task button -->
             <button 
               on:mouseover={() => isHoveringButton[index] = true} 
               on:mouseout={() => isHoveringButton[index] = false} 
@@ -204,6 +207,7 @@ pixelady -->
       </li>
     {/each}
   </ul>
+</container>
 
   <!-- completed -->
   {#if $completedList.length > 0}
