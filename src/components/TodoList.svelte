@@ -32,6 +32,12 @@ pixelady -->
 
 
 
+<!-- in order to let the dnd drag the whole item i need to make it into a div -->
+<!-- if statement ruins completed tasks -->
+<!-- if todoList.len = 0 && completed.length > 0 => "all tasks complete" -->
+
+
+
 
 <script lang="ts">
   import { onMount } from 'svelte';
@@ -58,7 +64,7 @@ pixelady -->
     const interval = setInterval(() => {
       currentBgIndex = (currentBgIndex + 1) % bgs.length;
       updateBackground();
-    }, 6000); 
+    }, 30000); 
 
     //  clean function to clear the interval when the component is destroyed
     return () => {
@@ -82,9 +88,7 @@ pixelady -->
     isHovering: boolean
   }
 
-  let items: ListItem[] = [
-    {id: 1, text: "nope", completed: false, isHovering: false}
-  ];
+  let items: ListItem[] = [];
 
   const handleConsider = (event : CustomEvent<DndEvent<ListItem>>) => {
     console.log("consider");
@@ -93,6 +97,7 @@ pixelady -->
 
   const handleFinalize = (event : CustomEvent<DndEvent<ListItem>>) => {
     console.log("finalize");
+    items = event.detail.items;
   }
 
   // Function to handle adding a new todo item
@@ -152,8 +157,7 @@ pixelady -->
     </div>
   </form>
 
-  {#if $todoList}
-  <container>
+  {#if $todoList.length > 0}
     <ul 
       class="space-y-2"
       
@@ -162,9 +166,7 @@ pixelady -->
 
         <li
           
-    use:dndzone="{{ items: $todoList, flipDurationMs: 300 }}"
-    on:consider="{handleConsider}"
-    on:finalize="{handleFinalize}"
+    
   
           animate:flip="{{duration: 1000}}"
           on:mouseover={() => todoList.update(items => {
@@ -187,9 +189,13 @@ pixelady -->
             updatedItems[index].isHovering = false;
             return updatedItems;
           })}
-          class="flex flex-row bg-oxblood bg-opacity-75 shadow-md rounded-md">
+          use:dndzone="{{ items: items, flipDurationMs: 300 }}"
+            on:consider="{handleConsider}"
+            on:finalize="{handleFinalize}"
+          class="flex drag-handle max-w-md m-auto p-2 overflow-scroll flex-row bg-oxblood bg-opacity-75 shadow-md rounded-md">
 
 <!-- complete task button -->
+          
             <button 
               on:mouseover={() => isHoveringButton[index] = true} 
               on:mouseout={() => isHoveringButton[index] = false} 
@@ -216,10 +222,15 @@ pixelady -->
                 🗑
             </button>
          
+         
       </li>
     {/each}
   </ul>
-</container>
+  {:else if $todoList.length < 1 && $completedList.length > 0}
+  <p class="font-input tracking-tighter font-bold text-8xl mt-8 text-black">All tasks complete. Good Job 🐡</p>
+{:else}
+  <p class="font-input tracking-tighter font-bold text-2xl mt-8 ml-4 text-black">No items in the todo list.</p>
+{/if}
 
   <!-- completed -->
   {#if $completedList.length > 0}
@@ -250,10 +261,6 @@ pixelady -->
   {/each}
   </ul>
 
-
-{:else}
-  <p>No items in the todo list.</p>
-{/if}
 </div>
 </body>
 
