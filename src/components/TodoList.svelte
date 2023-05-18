@@ -75,11 +75,23 @@ pixelady -->
   const todoList = writable<{ id: number; text: string; completed: boolean; isHovering: boolean }[]>([]);
   const completedList = writable<{ text: string }[]>([]);
 
-  const handleConsider = (event: any) => {
-    console.log("consider");
+  interface ListItem {
+    id: number
+    text: string
+    completed: boolean
+    isHovering: boolean
   }
 
-  const handleFinalize = (event: any) => {
+  let items: ListItem[] = [
+    {id: 1, text: "nope", completed: false, isHovering: false}
+  ];
+
+  const handleConsider = (event : CustomEvent<DndEvent<ListItem>>) => {
+    console.log("consider");
+    items = event.detail.items;
+  }
+
+  const handleFinalize = (event : CustomEvent<DndEvent<ListItem>>) => {
     console.log("finalize");
   }
 
