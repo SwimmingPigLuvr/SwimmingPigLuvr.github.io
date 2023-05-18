@@ -78,7 +78,6 @@ pixelady -->
   let isHoveringCompleted: boolean[] = [];
 
   // Create a writable store to hold the list of todo items
-  const todoList = writable<{ id: number; text: string; completed: boolean; isHovering: boolean }[]>([]);
   const completedList = writable<{ text: string }[]>([]);
 
   interface ListItem {
@@ -87,14 +86,20 @@ pixelady -->
     completed: boolean
     isHovering: boolean
   }
+  
+  export const todoList = writable<ListItem[]>([]);
 
   let items: ListItem[] = [];
 
+  $: items = $todoList;
+
+  // dnd functions
+  // consider
   const handleConsider = (event : CustomEvent<DndEvent<ListItem>>) => {
     console.log("consider");
     items = event.detail.items;
   }
-
+  // finalize
   const handleFinalize = (event : CustomEvent<DndEvent<ListItem>>) => {
     console.log("finalize");
     items = event.detail.items;
@@ -192,7 +197,7 @@ pixelady -->
           use:dndzone="{{ items: items, flipDurationMs: 300 }}"
             on:consider="{handleConsider}"
             on:finalize="{handleFinalize}"
-          class="flex drag-handle max-w-md m-auto p-2 overflow-scroll flex-row bg-oxblood bg-opacity-75 shadow-md rounded-md">
+          class="flex transition transform ease-in-out duration-150 hover:-translate-y-1 transfo drag-handle max-w-md m-auto p-2 overflow-scroll flex-row bg-oxblood hover:bg-rose-400 bg-opacity-75 shadow-md rounded-md">
 
 <!-- complete task button -->
           
@@ -239,7 +244,7 @@ pixelady -->
   <ul class="space-y-2">
   {#each $completedList as item, index}
     <li 
-    class="flex flex-row bg-emerald-800 bg-opacity-50 shadow-md rounded-md">
+    class="flex flex-row bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
     <button 
     on:mouseover={() => isHoveringCompleted[index] = true} 
     on:mouseout={() => isHoveringCompleted[index] = false} 
