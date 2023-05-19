@@ -36,6 +36,8 @@ pixelady -->
 <!-- if statement ruins completed tasks -->
 <!-- if todoList.len = 0 && completed.length > 0 => "all tasks complete" -->
 
+<!-- task item should animate in -->
+
 
 
 
@@ -44,6 +46,7 @@ pixelady -->
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
   import { dndzone } from 'svelte-dnd-action';
+  import { fade, fly, scale } from 'svelte/transition';
 
   // task id
   let idCounter = 0;
@@ -78,7 +81,7 @@ pixelady -->
   let isHoveringCompleted: boolean[] = [];
 
   // Create a writable store to hold the list of todo items
-  const completedList = writable<{ text: string }[]>([]);
+  const completedList = writable<ListItem[]>([]);
 
   interface ListItem {
     id: number
@@ -150,11 +153,29 @@ pixelady -->
 </script>
 
 <body>
+  <!-- navlinks -->
+<!-- <div class="flex flex-col  left-0">
+  <div class="flex-1 bg-black py-2 px-4 bg-opacity-50">
+    <h3 class="text-white font-input">HOME</h3>
+  </div>
+  <div class="flex-2 bg-black py-2 px-4 bg-opacity-50">
+    <h3 class="text-white font-input">HOME</h3>
+  </div>
+  <div class="flex-3 bg-black py-2 px-4 bg-opacity-50">
+    <h3 class="text-white font-input">HOME</h3>
+  </div>
+</div> -->
+<!-- navlinks -->
+
+<!-- title -->
   <div class="bg-black max-w-md m-auto">
   <h1 class="glow mt-10 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
   </div>
+
+<!-- main container -->
 <div class="container mx-auto p-4 max-w-md bg-white rounded-md">
 
+<!-- input task -->
   <form on:submit={addTodoItem} class="mb-4">
     <div class="flex flex-row">
       <input type="text" name="todo" placeholder="Enter a todo item" class="placeholder-blue-400 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
@@ -162,18 +183,14 @@ pixelady -->
     </div>
   </form>
 
-  {#if $todoList.length > 0}
-    <ul 
-      class="space-y-2"
-      
-    >
-      {#each $todoList as todo, index (todo.id)}
 
+  {#if $todoList.length > 0}
+    <ul class="space-y-2">
+      {#each $todoList as todo, index (todo.id)}
         <li
-          
-    
-  
-          animate:flip="{{duration: 1000}}"
+          in:fade={{ duration: 500 }}
+          out:scale={{ duration: 500 }}
+          animate:flip={{duration: 250}}
           on:mouseover={() => todoList.update(items => {
             const updatedItems = [...items];
             updatedItems[index].isHovering = true;
@@ -197,7 +214,7 @@ pixelady -->
           use:dndzone="{{ items: items, flipDurationMs: 300 }}"
             on:consider="{handleConsider}"
             on:finalize="{handleFinalize}"
-          class="flex transition transform ease-in-out duration-150 hover:-translate-y-1 transfo drag-handle max-w-md m-auto p-2 overflow-scroll flex-row bg-oxblood hover:bg-rose-400 bg-opacity-75 shadow-md rounded-md">
+          class="flex flex-row bg-sky-600 hover:bg-rose-500 shadow-md rounded-md">
 
 <!-- complete task button -->
           
@@ -220,10 +237,10 @@ pixelady -->
           <input type="text" 
             value={todo.text} 
             on:input={(event) => editTodoItem(index, event)} 
-              class="font-bold font-p22 text-white w-full px-4 py-2 rounded-md bg-sky-500 bg-opacity-0 focus:outline-none">
+              class="font-bold font-input text-white w-full px-4 py-2 rounded-md bg-sky-500 bg-opacity-0 focus:outline-none">
             <button 
               on:click={() => removeTodoItem(index)}
-              class="glow font-p22 mr-2">
+              class="hover:-translate-y-0.5 hover:shadow-white mr-2">
                 🗑
             </button>
          
@@ -242,8 +259,10 @@ pixelady -->
   <h2 class="mt-4 font-input text-black font-bold tracking-tighter text-3xl">completed tasks</h2>
   {/if}
   <ul class="space-y-2">
-  {#each $completedList as item, index}
+  {#each $completedList as item, index (item.id)}
     <li 
+          transition:fade={{ duration: 500 }}
+          animate:flip={{duration: 150}}
     class="flex flex-row bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
     <button 
     on:mouseover={() => isHoveringCompleted[index] = true} 
