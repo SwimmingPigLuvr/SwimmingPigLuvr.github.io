@@ -10,13 +10,16 @@ export default {
       'input': ['input-mono', 'monospace'],
     },
 
-    extend: 
-    {colors: {
+    extend: {
+      colors: {
       'bermuda': '#78dcca',
       'oxblood': '#4A0404',
-    },
+      },
       placeholderColor: {
         'blue': '#AOAECO'
+      },
+      minWidth: {
+        'min-w-remilio': '2000px',
       }
     },
   },
