@@ -46,8 +46,7 @@ pixelady -->
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
-  import { dndzone } from 'svelte-dnd-action';
-  import { fade, fly, scale } from 'svelte/transition';
+  import { fade, scale } from 'svelte/transition';
 
   // task id
   let idCounter = 0;
@@ -96,18 +95,6 @@ pixelady -->
   let items: ListItem[] = [];
 
   $: items = $todoList;
-
-  // dnd functions
-  // consider
-  const handleConsider = (event : CustomEvent<DndEvent<ListItem>>) => {
-    console.log("consider");
-    items = event.detail.items;
-  }
-  // finalize
-  const handleFinalize = (event : CustomEvent<DndEvent<ListItem>>) => {
-    console.log("finalize");
-    items = event.detail.items;
-  }
 
   // Function to handle adding a new todo item
   function addTodoItem(event: Event) {
@@ -212,9 +199,6 @@ pixelady -->
             updatedItems[index].isHovering = false;
             return updatedItems;
           })}
-          use:dndzone="{{ items: items, flipDurationMs: 300 }}"
-            on:consider="{handleConsider}"
-            on:finalize="{handleFinalize}"
           class="flex flex-row bg-sky-600 hover:bg-rose-500 shadow-md rounded-md">
 
 <!-- complete task button -->
