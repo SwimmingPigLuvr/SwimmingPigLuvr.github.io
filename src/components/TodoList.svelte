@@ -46,7 +46,8 @@ pixelady -->
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
-  import { fade, scale } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
+
 
   // task id
   let idCounter = 0;
@@ -62,7 +63,10 @@ pixelady -->
     document.body.style.backgroundAttachment = 'fixed';
   }
 
+  
+
   onMount(() => {
+    
     updateBackground(); // update the background immediately on mount
     const interval = setInterval(() => {
       currentBgIndex = (currentBgIndex + 1) % bgs.length;
@@ -156,9 +160,10 @@ pixelady -->
 <!-- navlinks -->
 
 <!-- title -->
-  <div class="bg-black max-w-md m-auto">
-  <h1 class="glow mt-10 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
-  </div>
+  <div class=" max-w-md m-auto">
+  <h1 class="glow bg-black mt-10 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
+</div>
+  
 
 <!-- main container -->
 <div class="container mx-auto p-4 max-w-md bg-white rounded-md">
@@ -177,7 +182,6 @@ pixelady -->
       {#each $todoList as todo, index (todo.id)}
         <li
           in:fade={{ duration: 500 }}
-          out:scale={{ duration: 500 }}
           animate:flip={{duration: 250}}
           on:mouseover={() => todoList.update(items => {
             const updatedItems = [...items];
@@ -249,6 +253,9 @@ pixelady -->
           transition:fade={{ duration: 500 }}
           animate:flip={{duration: 150}}
     class="flex flex-row bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
+  <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
+    {item.text}
+  </p>
     <button 
     on:mouseover={() => isHoveringCompleted[index] = true} 
     on:mouseout={() => isHoveringCompleted[index] = false} 
@@ -256,16 +263,13 @@ pixelady -->
     on:blur={() => isHoveringCompleted[index] = false} 
     tabindex="0"
     on:click={() => removeCompletedItem(index)} 
-    class="ml-2 text-2xl">
+    class="mr-1 text-2xl">
       {#if isHoveringCompleted[index]}
         <span>🚮</span>
       {:else}
         <span>🔘</span>
       {/if}
   </button> 
-  <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
-    {item.text}
-  </p>
   </li>
   {/each}
   </ul>
