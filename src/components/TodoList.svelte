@@ -46,7 +46,6 @@ pixelady -->
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
-  import { fade } from 'svelte/transition';
 
 
   // task id
@@ -166,22 +165,33 @@ pixelady -->
   
 
 <!-- main container -->
-<div class="container mx-auto p-4 max-w-md bg-white rounded-md">
+<div class="container flex flex-col mx-auto p-4 max-w-md bg-white rounded-md">
 
 <!-- input task -->
-  <form on:submit={addTodoItem} class="mb-4">
+<div class="mb-4">
+  <form on:submit={addTodoItem}>
     <div class="flex flex-row">
-      <input type="text" name="todo" placeholder="Enter a todo item" class="placeholder-blue-400 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
+      <input type="text" name="todo" placeholder="enter an important task" class="placeholder-blue-400 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
       <button type="submit" class="flex-2 ml-2 px-4 py-2 font-input bg-blue-900 text-white hover:bg-sky-200 hover:text-blue-900 transition-all duration-200 text-3xl rounded-md">+</button>
     </div>
   </form>
+  {#if $todoList.length < 1 && $completedList.length > 0}
+  <p class="font-input tracking-tighter font-bold text-8xl mt-8 text-black">All tasks complete. Good Job 🐡</p>
+{:else if $todoList.length < 1 && $completedList.length < 1}
+  <p class="font-input tracking-tighter font-bold text-2xl mt-8 ml-4 text-black">No important tasks.</p>
+  {/if}
+</div>
+
+<!-- important tasks container -->
+<div class="flex flex-row space-x-4">
 
 
+  <!-- tasks list -->
+  <div class="flex-1">
   {#if $todoList.length > 0}
     <ul class="space-y-2">
       {#each $todoList as todo, index (todo.id)}
         <li
-          in:fade={{ duration: 500 }}
           animate:flip={{duration: 250}}
           on:mouseover={() => todoList.update(items => {
             const updatedItems = [...items];
@@ -237,20 +247,16 @@ pixelady -->
       </li>
     {/each}
   </ul>
-  {:else if $todoList.length < 1 && $completedList.length > 0}
-  <p class="font-input tracking-tighter font-bold text-8xl mt-8 text-black">All tasks complete. Good Job 🐡</p>
-{:else}
-  <p class="font-input tracking-tighter font-bold text-2xl mt-8 ml-4 text-black">No items in the todo list.</p>
 {/if}
 
-  <!-- completed -->
+  <!-- completed tasks -->
+  <div class="flex-1">
   {#if $completedList.length > 0}
   <h2 class="mt-4 font-input text-black font-bold tracking-tighter text-3xl">completed tasks</h2>
   {/if}
   <ul class="space-y-2">
   {#each $completedList as item, index (item.id)}
     <li 
-          transition:fade={{ duration: 500 }}
           animate:flip={{duration: 150}}
     class="flex flex-row bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
   <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
@@ -274,6 +280,8 @@ pixelady -->
   {/each}
   </ul>
 
+</div>
+  </div>
 </div>
 </body>
 

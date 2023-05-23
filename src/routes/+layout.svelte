@@ -1,3 +1,8 @@
+<!-- design for different screen sizes -->
+<!-- fireship firebase??????????? yessssss -->
+
+
+
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import "../app.css"
@@ -26,9 +31,9 @@
     />
   {/if}
 </div>
-<div class="flex -space-y-1 rounded-tl-lg flex-col fixed bottom-36 right-0 py-2 px-4 bg-black bg-opacity-30">
+<div class="absolute -space-y-1 flex-col bottom-16 right-0 py-2 px-4 bg-black bg-opacity-30">
 <h3 class="text-white font-input">
-    made by 
+    by 
     <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
       <span 
         on:mouseover={() => {
