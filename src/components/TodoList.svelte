@@ -1,46 +1,3 @@
-<!-- todoTODO -->
-<!-- ✅✅DONE! list of completed items in a separate tab because completed gets deleted -->
-<!-- ✅✅DONE! complete button on lefthand side on hover it turns to a check -->
-<!-- ✅DONE! created background style-->
-<!-- make sure that completed list looks as good as normal list. just use different colors to differentiate -->
-<!-- create themes
-  user can chagne colors and backgrounds -->
-<!-- prioritize items
-create ui that reflects significance and urgency of items -->
-<!-- create login so users can save their lists
-also so I can save MY list -->
-<!-- github -->
-<!-- fix delete button: it looks bad -->
-<!-- add animations -->
-<!-- practice typing speed -->
-
-<!-- 5.17.23 -->
-<!-- goal of this is to test limits of frontend control -->
-<!-- shuffle bg -->
-<!-- darkmode -->
-<!-- dank themes -->
-<!-- themes change everything:
-title Font
-todo div shapes
-buttons animations
-maybe even sounds perhaps -->
-<!-- example themes
-remilio
-bonkler
-milady
-pixelady -->
-
-
-
-<!-- in order to let the dnd drag the whole item i need to make it into a div -->
-<!-- if statement ruins completed tasks -->
-<!-- if todoList.len = 0 && completed.length > 0 => "all tasks complete" -->
-
-<!-- task item should animate in -->
-
-
-
-
 <script lang="ts">
   import "../app.css";
   import { onMount } from 'svelte';
@@ -165,7 +122,7 @@ pixelady -->
   
 
 <!-- main container -->
-<div class="container flex flex-col mx-auto p-4 max-w-md bg-white rounded-md">
+<div class="container flex flex-col max-w-md sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto p-4 bg-white rounded-md">
 
 <!-- input task -->
 <div class="mb-4">
@@ -176,18 +133,18 @@ pixelady -->
     </div>
   </form>
   {#if $todoList.length < 1 && $completedList.length > 0}
-  <p class="font-input tracking-tighter font-bold text-8xl mt-8 text-black">All tasks complete. Good Job 🐡</p>
+  <p class="font-input tracking-tighter font-bold text-8xl mt-2 text-black">All tasks complete. Good Job 🐡</p>
 {:else if $todoList.length < 1 && $completedList.length < 1}
   <p class="font-input tracking-tighter font-bold text-2xl mt-8 ml-4 text-black">No important tasks.</p>
   {/if}
 </div>
 
 <!-- important tasks container -->
-<div class="flex flex-row space-x-4">
+<div class="flex flex-row space-x-4 flex-grow flex-shrink">
 
 
   <!-- tasks list -->
-  <div class="flex-1">
+  <div class="flex-grow flex-shrink">
   {#if $todoList.length > 0}
     <ul class="space-y-2">
       {#each $todoList as todo, index (todo.id)}
@@ -213,7 +170,7 @@ pixelady -->
             updatedItems[index].isHovering = false;
             return updatedItems;
           })}
-          class="flex flex-row bg-sky-600 hover:bg-rose-500 shadow-md rounded-md">
+          class="flex flex-row bg-sky-600 hover:bg-sky-400 rounded-lg">
 
 <!-- complete task button -->
           
@@ -250,7 +207,7 @@ pixelady -->
 {/if}
 
   <!-- completed tasks -->
-  <div class="flex-1">
+  <div class="flex-2 flex-grow flex-shrink">
   {#if $completedList.length > 0}
   <h2 class="mt-4 font-input text-black font-bold tracking-tighter text-3xl">completed tasks</h2>
   {/if}
@@ -258,7 +215,7 @@ pixelady -->
   {#each $completedList as item, index (item.id)}
     <li 
           animate:flip={{duration: 150}}
-    class="flex flex-row bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
+    class="flex flex-row2 bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
   <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
     {item.text}
   </p>
