@@ -1,11 +1,11 @@
 <script>
-    import TodoList from "../../components/TodoList.svelte";
+    import Todo from "../../components/Todo.svelte";
 
 
 </script>
 
 <body>
-<TodoList />
+<Todo />
 </body>
 
 

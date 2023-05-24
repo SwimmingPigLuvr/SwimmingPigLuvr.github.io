@@ -4,12 +4,17 @@
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
 
+  export const prop = "default value";
+
 
   // task id
   let idCounter = 0;
 
   // shuffle bg
-  let bgs: string[] = ['/images/notes.png', '/images/forbidden.jpeg', '/images/vroom.png', '/images/shelby.webp'];
+  let bgs: string[] = ['/images/artGangMoney.jpeg', '/images/notes.png',  '/images/vroom.png', '/images/shelby.webp'];
+
+
+
   let currentBgIndex: number = 0;
 
   function updateBackground(): void {
@@ -133,7 +138,7 @@
     </div>
   </form>
   {#if $todoList.length < 1 && $completedList.length > 0}
-  <p class="font-input tracking-tighter font-bold text-8xl mt-2 text-black">All tasks complete. Good Job 🐡</p>
+  <p class="font-input tracking-tighter font-bold text-8xl mt-2a text-black">All tasks complete. Good Job 🐡</p>
 {:else if $todoList.length < 1 && $completedList.length < 1}
   <p class="font-input tracking-tighter font-bold text-2xl mt-8 ml-4 text-black">No important tasks.</p>
   {/if}
