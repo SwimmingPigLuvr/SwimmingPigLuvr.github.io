@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.glow {
+    transition: text-shadow 0.2s ease-in;
+    text-shadow: 0 0 10px rgb(0, 0, 0), /* horizontal offset, vertical offset, blur radius, color */
+                 0 0 20px rgb(0, 0, 0),
+                 0 0 30px #000000,
+                 0 0 40px #000000;
+  }
+
+  .glow:hover {
+    text-shadow: 0 0 10px rgb(85, 255, 0), /* horizontal offset, vertical offset, blur radius, color */
+                 0 0 20px #79ff51,
+                 0 0 30px rgb(81, 255, 0),
+                 0 0 50px rgb(255, 255, 255);
+  }
+
+.notes-bg {
+    background-image: url('/images/notes.png');
+    background-size: cover;
+    background-position: center;
+}
+
+
+.sunset-bg {
+    background-image: url('/images/sunset.png');
+    background-size: cover;
+    background-position: center;
+}
+
+
+.forbidden-bg {
+    background-image: url('/images/.forbidden.jpeg');
+    background-size: cover;
+    background-position: center;
+}

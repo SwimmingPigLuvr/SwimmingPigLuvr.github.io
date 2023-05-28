@@ -8,6 +8,7 @@
 
 <Login />
 <Todo />
+<FirebaseApp />
 
 </body>
 

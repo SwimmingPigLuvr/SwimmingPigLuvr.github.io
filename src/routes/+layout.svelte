@@ -3,16 +3,15 @@
 
 
 
-<script lang="ts">
+<script>
   import { fade } from 'svelte/transition';
   import "../app.css"
   let hover = false;
   let hoverCount = 0;
   const hoverPositions = [100, 50, 30, 0];
-  let remi = [6198, 4153, 4981];
+  let remi = [6198, 4153, 4981, 6681];
   let selectedRemi = remi[Math.floor(Math.random() * remi.length)];
 
-  let socialHover: string = 'connect';
 </script>
 
 

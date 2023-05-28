@@ -4,14 +4,13 @@
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
 
-  export const prop = "default value";
 
 
   // task id
   let idCounter = 0;
 
   // shuffle bg
-  let bgs: string[] = ['/images/artGangMoney.jpeg', '/images/notes.png',  '/images/vroom.png', '/images/shelby.webp'];
+  let bgs: string[] = ['/images/notes.png', '/images/vroom.png', '/images/artGangMoney.jpeg', '/images/shelby.webp'];
 
 
 
@@ -121,8 +120,8 @@
 <!-- navlinks -->
 
 <!-- title -->
-  <div class=" max-w-md m-auto">
-  <h1 class="glow bg-black mt-10 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
+  <div class="max-w-md m-auto">
+  <h1 class="glow bg-black mt-20 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
 </div>
   
 
@@ -133,7 +132,7 @@
 <div class="mb-4">
   <form on:submit={addTodoItem}>
     <div class="flex flex-row">
-      <input type="text" name="todo" placeholder="enter an important task" class="placeholder-blue-400 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
+      <input type="text" name="todo" placeholder="enter an important task" class="placeholder-blue-400 bg-slate-100 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
       <button type="submit" class="flex-2 ml-2 px-4 py-2 font-input bg-blue-900 text-white hover:bg-sky-200 hover:text-blue-900 transition-all duration-200 text-3xl rounded-md">+</button>
     </div>
   </form>
