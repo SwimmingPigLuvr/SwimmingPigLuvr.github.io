@@ -32,7 +32,13 @@
 
 
 .forbidden-bg {
-    background-image: url('/images/.forbidden.jpeg');
+    background-image: url('/images/forbidden.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.login-bg {
+    background-image: url('/images/6198assisstant.png');
     background-size: cover;
     background-position: center;
 }

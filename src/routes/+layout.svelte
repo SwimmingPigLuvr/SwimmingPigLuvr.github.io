@@ -9,7 +9,7 @@
   let hover = false;
   let hoverCount = 0;
   const hoverPositions = [100, 50, 30, 0];
-  let remi = [6198, 4153, 4981, 6681];
+  let remi = [6198, 4153, 4981];
   let selectedRemi = remi[Math.floor(Math.random() * remi.length)];
 
 </script>
@@ -23,7 +23,7 @@
   {#if hover}
     <img 
       src="images/{selectedRemi}assisstant.png" 
-      alt="Remilio 6198" 
+      alt="Redacted Remilio Baby" 
       class="max-w-full"
       in:fade={{duration: 100}}
       out:fade={{duration: 300}}

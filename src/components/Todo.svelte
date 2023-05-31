@@ -9,34 +9,10 @@
   // task id
   let idCounter = 0;
 
-  // shuffle bg
-  let bgs: string[] = ['/images/notes.png', '/images/vroom.png', '/images/artGangMoney.jpeg', '/images/shelby.webp'];
-
-
-
-  let currentBgIndex: number = 0;
-
-  function updateBackground(): void {
-    document.body.style.backgroundImage = `url(${bgs[currentBgIndex]})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundAttachment = 'fixed';
-  }
-
   
 
   onMount(() => {
     
-    updateBackground(); // update the background immediately on mount
-    const interval = setInterval(() => {
-      currentBgIndex = (currentBgIndex + 1) % bgs.length;
-      updateBackground();
-    }, 30000); 
-
-    //  clean function to clear the interval when the component is destroyed
-    return () => {
-      clearInterval(interval);
-    };
   });
 
   // button hover
@@ -49,7 +25,8 @@
 
   interface ListItem {
     id: number
-    text: string
+    title: string
+    details: string
     completed: boolean
     isHovering: boolean
   }
@@ -66,7 +43,7 @@
     const todoInput = event.target as HTMLFormElement;
     const newTodo = todoInput.todo.value.trim();
     if (newTodo !== '') {
-      todoList.update(items => [...items, { id: idCounter++, text: newTodo, completed: false, isHovering: false }]);
+      todoList.update(items => [...items, { id: idCounter++, title: newTodo, details: newTodo, completed: false, isHovering: false }]);
       todoInput.reset();
     }
   }
@@ -95,7 +72,7 @@
     const newText = (event.target as HTMLInputElement).value;
     todoList.update(items => {
       const updatedItems = [...items];
-      updatedItems[index].text = newText;
+      updatedItems[index].details = newText;
       return updatedItems;
     });
   }
@@ -104,7 +81,7 @@
   
 </script>
 
-<body>
+<body class="">
   <!-- navlinks -->
 <!-- <div class="flex flex-col  left-0">
   <div class="flex-1 bg-black py-2 px-4 bg-opacity-50">
@@ -195,7 +172,7 @@
           <!-- svelte-ignore a11y-mouse-events-have-key-events -->
          
           <input type="text" 
-            value={todo.text} 
+            value={todo.details} 
             on:input={(event) => editTodoItem(index, event)} 
               class="font-bold font-input text-white w-full px-4 py-2 rounded-md bg-sky-500 bg-opacity-0 focus:outline-none">
             <button 
@@ -221,7 +198,7 @@
           animate:flip={{duration: 150}}
     class="flex flex-row2 bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
   <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
-    {item.text}
+    {item.details}
   </p>
     <button 
     on:mouseover={() => isHoveringCompleted[index] = true} 
@@ -247,11 +224,16 @@
 </body>
 
 <style>
+
   body {
-    background: url(${bgs[currentBgIndex]});
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: url('/images/notes.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    overflow: hidden;
   }
 
   .glow {
