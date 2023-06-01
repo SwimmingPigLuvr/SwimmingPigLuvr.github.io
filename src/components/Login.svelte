@@ -1,5 +1,6 @@
- <!-- handle login/register -->
- <!-- login/register as a toggle -->
+<!-- todo -->
+<!-- create a user collection in firebase -->
+<!-- collection includes username, pfp, and todolist -->
 
 
 
@@ -29,7 +30,7 @@
 
     // close login modal
     const closeLogin = (event) => {
-        if (event.target.classList.contains('login-overlay') && errorMessage !== '') {
+        if (event.target.classList.contains('login-overlay')) {
             showLoginForm.set(false);
         }
     }
@@ -60,13 +61,20 @@
         console.error("Auth is not initialized");
         return;
     }
+    if (password !== confirmPassword) {
+        errorMessage = "passwords do not match"
+        console.error("passwords do not match");
+        return;
+    }
+
+
     try {
         const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
         const user = userCredential.user;
         // user is registered
     } catch (error) {
         errorMessage = getErrorMessage(error.code);
-        console.error('Error signing out:', error);
+        console.error(error);
     }
   }
 
@@ -87,19 +95,23 @@
             // Additional code or redirection logic after sign-out
         } catch (error) {
             errorMessage = getErrorMessage(error.code);
-            console.error('Error signing out:', error);
+            console.error(error);
         }
     }
 
     // Show errors
     function getErrorMessage(errorCode) {
         switch (errorCode) {
+            case password !== confirmPassword:
+                return 'passwords do not match';
             case 'auth/invalid-email':
                 return 'please enter a valid email';
             case 'auth/user-not-found': {
                 if (mode === 'login') {switchMode();}
                 return 'user not found. please register';
             }
+            case 'auth/wrong-password':
+                return 'wrong password';
             case 'auth/weak-password':
                 return 'password must be at least 6 characters';
             case 'auth/email-already-in-use':
@@ -122,7 +134,7 @@
     <!-- wait this should be the user's pfp -->
     <div class="text-black fixed top-3 right-3">
         {#if $user}
-            <p class="font-input tracking-tighter text-xl px-6 py-3">Hello {$user.id}</p>
+            <p class="font-input tracking-tighter text-xl px-6 py-3">Hello {$user?.id}</p>
             <button on:click={signOutUser}>lougout</button>
         {:else}
             <button 
@@ -141,18 +153,20 @@
         <div 
             on:click={closeLogin} transition:fade={{delay: 0, duration: 300}} 
             class="login-overlay fixed font-input tracking-tighter text-black inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center">
+
+            <!-- login modal -->
             <div class="forbidden-bg max-w-xl border-2 p-8 mt-10 rounded-md">
+                <!-- login/register -->
             <div class="text-white text-opacity-50 text-2xl flex space-x-6 mb-4">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <h2 class="hover:translate-y-0.5 cursor-pointer hover:text-white {mode === 'login' ? 'active' : ''}" on:click={switchMode} >Log in</h2>
+                <h2 class="cursor-pointer hover:text-white {mode === 'login' ? 'active' : ''}" on:click={switchMode} >Log in</h2>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <h2>/</h2>
-                <h2 class="hover:translate-y-0.5 cursor-pointer hover:text-white {mode === 'register' ? 'active' : ''}" on:click={switchMode}>Register</h2>
+                <h2 class="cursor-pointer hover:text-white {mode === 'register' ? 'active' : ''}" on:click={switchMode}>Register</h2>
             </div>
 
 
-            <!-- todo -->
-             <!-- if mode = login vs mode = register -->
+            <!-- form -->
             <form on:submit|preventDefault={handleLogin}>
                 <div class="mb-4">
                 <input id="email" bind:value={email} placeholder="email" class="boder-2 border-transparent hover:border-white w-full px-3 bg-black text-white py-2 border rounded-md" type="email" required>
@@ -171,10 +185,9 @@
                 <button 
                     on:click={handleSubmit}
                     type="submit" 
-                    class="login-overlay boder-2 border-transparent hover:border-white hover:bg-sky-500 transform transition-colors duration-200 ease-in-out border-2 right mt-4 px-4 py-2 bg-black text-white rounded-md">
+                    class="border-transparent hover:border-white hover:bg-sky-500 transform transition-colors duration-200 ease-in-out border-2 right mt-4 px-4 py-2 bg-black text-white rounded-md">
                         {#if $user}
                             Login Successful
-                            {() => closeLogin()}
                         {:else}
                             {mode}
                         {/if}
