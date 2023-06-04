@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
+  import autoAnimate from '@formkit/auto-animate';
 
 
 
@@ -127,10 +128,11 @@
   <!-- tasks list -->
   <div class="flex-grow flex-shrink">
   {#if $todoList.length > 0}
-    <ul class="space-y-2">
+    <ul 
+      use:autoAnimate
+      class="space-y-2">
       {#each $todoList as todo, index (todo.id)}
         <li
-          animate:flip={{duration: 250}}
           on:mouseover={() => todoList.update(items => {
             const updatedItems = [...items];
             updatedItems[index].isHovering = true;
@@ -195,7 +197,6 @@
   <ul class="space-y-2">
   {#each $completedList as item, index (item.id)}
     <li 
-          animate:flip={{duration: 150}}
     class="flex flex-row2 bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
   <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
     {item.details}
@@ -229,7 +230,7 @@
     height: 100vh;
     margin: 0;
     padding: 0;
-    background: url('/images/notes.png');
+    background: url('/images/shelby.webp');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

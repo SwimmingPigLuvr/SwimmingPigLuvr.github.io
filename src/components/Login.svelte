@@ -6,12 +6,13 @@
 
 
 <script>
-    import { auth } from '$lib/firebase.js';
+    import { auth, db } from '$lib/firebase.js';
     import { userStore } from 'sveltefire';
     import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
     import { fade } from 'svelte/transition';
+    import { addDoc, collection } from 'firebase/firestore';
 
     const user = userStore(auth);
     let authInstance;
@@ -22,10 +23,13 @@
     let showLoginForm = writable(false);
     let errorMessage = '';
 
+    export const userName = writable(null);
+
     // toggle login/register
     function switchMode() {
         mode = mode === "login" ? "register" : "login";
         errorMessage = '';
+        console.log(mode + " is the current mode");
     }
 
     // close login modal
@@ -55,31 +59,47 @@
     }
   }
 
+
+
   // Register
   async function handleRegister() {
     if (!authInstance) {
         console.error("Auth is not initialized");
         return;
     }
+
     if (password !== confirmPassword) {
-        errorMessage = "passwords do not match"
-        console.error("passwords do not match");
+        console.error("Passwords do not match");
         return;
     }
 
-
     try {
+        const docRef = await addDoc(collection(db, "users"), {
+                first: "Ada",
+                last: "Lovelace",
+                born: 1815
+            });
+            console.log("Document written with ID: ", docRef.id);
+        
+        // Create new user
         const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
         const user = userCredential.user;
-        // user is registered
+
+        
+
+        
+
+        console.log('User registered with username:');
     } catch (error) {
-        errorMessage = getErrorMessage(error.code);
+        const errorMessage = getErrorMessage(error.code);
+        console.error(errorMessage);
         console.error(error);
     }
   }
 
   // Submit
   async function handleSubmit() {
+    console.log("handling " + mode);
     if (mode === "login") {
       await handleLogin();
     } else {
@@ -122,6 +142,19 @@
         }
     }
 
+    async function createDb() {
+        try {
+            const docRef = await addDoc(collection(db, "users"), {
+                first: "Ada",
+                last: "Lovelace",
+                born: 1815
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
 
     
 
@@ -131,20 +164,19 @@
 
 <body>
 
-    <!-- wait this should be the user's pfp -->
-    <div class="text-black fixed top-3 right-3">
-        {#if $user}
-            <p class="font-input tracking-tighter text-xl px-6 py-3">Hello {$user?.id}</p>
-            <button on:click={signOutUser}>lougout</button>
-        {:else}
-            <button 
-                on:click={() => showLoginForm.set(!$showLoginForm)}
-                class="bg-lime-400 hover:bg-opacity-100 bg-opacity-50 border-4 border-transparent hover:border-black transform transition-all ease-in duration-100 rounded-full text-sm px-8 py-4 font-input">
-            
-                    <span class="">login </span>
-                
-            </button>
-        {/if}
+     <!-- login button -->
+    <div class="text-black fixed top-3 right-6 flex flex-col justify-end">
+        <button 
+            on:click={() => showLoginForm.set(!$showLoginForm)}
+            class="text-white hover:text-lime-400 transform transition-all ease-in duration-100 font-input">
+                <span class="">login </span>
+        </button>
+        <!-- create db -->
+        <button 
+            on:click={createDb}
+            class="text-white hover:text-lime-400 transform transition-all ease-in duration-100 font-input">
+                <span class="">click to create db </span>
+        </button>
 
         
     </div>
@@ -167,18 +199,39 @@
 
 
             <!-- form -->
-            <form on:submit|preventDefault={handleLogin}>
-                <div class="mb-4">
-                <input id="email" bind:value={email} placeholder="email" class="boder-2 border-transparent hover:border-white w-full px-3 bg-black text-white py-2 border rounded-md" type="email" required>
+            <form on:submit|preventDefault={handleLogin} class="text-white py-2 px-3">
+                <div class="mb-4 text-white" >
+                    <label for="email">email</label>
+                    <input 
+                        id="email" 
+                        bind:value={email} 
+                        placeholder="swimming@remilia.org" 
+                        autocomplete="email" 
+                        class="boder-2 border-transparent hover:border-white w-full px-3 bg-black text-white py-2 border rounded-md" 
+                        type="email" required>
                 </div>
         
                 <div class="mb-4">
-                <input id="password" bind:value={password} placeholder="password" class="boder-2 border-transparent hover:border-white w-full px-3 py-2 bg-black text-white border rounded-md" type="password" required>
+                    <label for="password">password</label>
+                    <input 
+                        id="password" 
+                        bind:value={password} 
+                        placeholder="password" 
+                        autocomplete="current-password" 
+                        class="boder-2 border-transparent hover:border-white w-full px-3 py-2 bg-black text-white border rounded-md" 
+                        type="password" required>
                 </div>
 
                 {#if mode==="register"}
                 <div transition:fade class="mb-4">
-                    <input id="confirmPassword" bind:value={confirmPassword} placeholder="confirm password" class="boder-2 border-transparent hover:border-white w-full px-3 py-2 bg-black text-white border rounded-md" type="password" required>
+                    <label for="confirmPassword">confirm Password</label>
+                    <input 
+                        id="confirmPassword" 
+                        bind:value={confirmPassword} 
+                        placeholder="confirm password" 
+                        autocomplete="new-password" 
+                        class="boder-2 border-transparent hover:border-white w-full px-3 py-2 bg-black text-white border rounded-md" 
+                        type="password" required>
                 </div>
                 {/if}
         
