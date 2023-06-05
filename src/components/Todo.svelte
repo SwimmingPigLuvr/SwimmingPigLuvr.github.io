@@ -4,6 +4,7 @@
   import { writable } from 'svelte/store';
   import { flip } from 'svelte/animate';
   import autoAnimate from '@formkit/auto-animate';
+  import { cubicOut } from "svelte/easing";
 
 
 
@@ -129,7 +130,7 @@
   <div class="flex-grow flex-shrink">
   {#if $todoList.length > 0}
     <ul 
-      use:autoAnimate
+      use:autoAnimate={{duration: 150}}
       class="space-y-2">
       {#each $todoList as todo, index (todo.id)}
         <li

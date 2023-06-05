@@ -3,12 +3,14 @@
  <!-- choose pfp -->
  <!-- choose username -->
 
+ <!-- choose username: 123 cheese. photo fades in on polaroid -->
+
 <script>
     import autoAnimate from '@formkit/auto-animate';
     import { auth } from '$lib/firebase.js';
     import { userStore } from 'sveltefire';
     import { writable } from "svelte/store";
-    import { fade, slide } from "svelte/transition";
+    import { fade, fly } from "svelte/transition";
     import { onMount } from 'svelte';
     import { cubicInOut } from 'svelte/easing';
 
@@ -65,41 +67,33 @@
 
 
 <!-- profile button -->
-<div class="fixed top-3 right-6">
+<div class="fixed top-3 left-6">
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
-    <!-- <button
+    <button
         on:click={() => showProfile.set(!$showProfile)}
-        class="">
+        class="opacity-80 hover:opacity-100">
         <img 
             src={userPfp.src} 
             alt={userPfp.alt} 
-            class="opacity-100 w-12 md:w-20 border-[0.25rem] border-b-[1.1rem] hover:border-cyan-400 transition-all ease-in-out duration-300 ">
-    </button> -->
-    <button
-    on:click={() => showProfile.set(!$showProfile)}
-    class="relative overflow-hidden">
-    <div 
-        class="absolute inset-0 bg-black opacity-100 hover:opacity-0 transition-opacity duration-300 ease-in-out">
-    </div>
-    <img 
-        src={userPfp.src} 
-        alt={userPfp.alt} 
-        class="relative w-12 md:w-20 border-[0.25rem] border-b-[1.1rem] border-cyan-400 transition-all ease-in-out duration-300 ">
-</button>
+            class="w-12 lg:w-28 md:w-20 border-[0.25rem] border-b-[1.1rem] transition-all ease-in-out duration-300 ">
+            <p class="hidden md:block absolute whitespace-pre-wrap bg-white mt-4 md:left-0 md:-bottom-4 font-input tracking-tighter text-ellipsis py-2 px-4 w-full">{name}</p> 
+    </button>
+    
     
     
 </div>
 
+    <!-- on:click={closeProfile} transition:slide={{duration: 1000, easing: cubicInOut}} -->
 {#if $showProfile}
  <!-- svelte-ignore a11y-click-events-have-key-events -->
  <div
-    on:click={closeProfile} transition:slide={{duration: 1000, easing: cubicInOut}}
+    on:click={closeProfile} in:fade={{duration: 300, easing: cubicInOut}}
     class="profile-overlay fixed font-input tracking-tighter text-black inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center">
     
     <!-- profile modal -->
-    <div class="fixed inset-5 md:inset-1/4 p-5 md:p-10 bg-black transform border-2 rounded-md">
+    <div class="fixed inset-10 md:inset-15 lg:inset-20 p-5 md:p-10 bg-black transform border-2 rounded-md">
 
         <!-- header -->
         <div class="flex flex-row justify-between mb-20">
