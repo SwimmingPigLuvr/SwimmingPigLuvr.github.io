@@ -2,9 +2,11 @@
   import "../app.css";
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { flip } from 'svelte/animate';
   import autoAnimate from '@formkit/auto-animate';
-  import { cubicOut } from "svelte/easing";
+  import { cubicInOut } from "svelte/easing";
+
+
+  export const tasksCompleted = writable(0);
 
 
 
@@ -49,6 +51,10 @@
       todoInput.reset();
     }
   }
+  
+  function countCompleted() {
+    tasksCompleted.update(n => n + 1);
+  }
 
   // function to complete a todo item
   function completeTodoItem(index: number) {
@@ -58,6 +64,8 @@
       return active;
     });
   }
+
+  
 
   // Function to handle removing a todo item
   function removeTodoItem(index: number) {
@@ -83,7 +91,7 @@
   
 </script>
 
-<body class="">
+<body class="bg-lime-400">
   <!-- navlinks -->
 <!-- <div class="flex flex-col  left-0">
   <div class="flex-1 bg-black py-2 px-4 bg-opacity-50">
@@ -100,12 +108,12 @@
 
 <!-- title -->
   <div class="max-w-md m-auto">
-  <h1 class="glow bg-black mt-20 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
+  <h1 class="glow bg-black mt-24 font-input text-white text-5xl tracking-tighter font-bold text-center mb-4">important tasks</h1>
 </div>
   
 
 <!-- main container -->
-<div class="container flex flex-col max-w-md sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto p-4 bg-white rounded-md">
+<div class="container flex flex-col max-w-md sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto p-4 bg-white yayo-border-blue">
 
 <!-- input task -->
 <div class="mb-4">
@@ -164,7 +172,7 @@
               on:focus={() => isHoveringButton[index] = true} 
               on:blur={() => isHoveringButton[index] = false} 
               tabindex="0"
-              on:click={() => completeTodoItem(index)} 
+              on:click={() => {completeTodoItem(index); countCompleted}} 
               class="ml-2 text-2xl">
                 {#if isHoveringButton[index]}
                   <span>💖</span>
@@ -231,26 +239,11 @@
     height: 100vh;
     margin: 0;
     padding: 0;
-    background: url('/images/shelby.webp');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     overflow: hidden;
   }
 
-  .glow {
-    transition: text-shadow 0.2s ease-in;
-    text-shadow: 0 0 10px rgb(0, 0, 0), /* horizontal offset, vertical offset, blur radius, color */
-                 0 0 20px rgb(0, 0, 0),
-                 0 0 30px #000000,
-                 0 0 40px #000000;
-  }
-
-  .glow:hover {
-    text-shadow: 0 0 10px rgb(85, 255, 0), /* horizontal offset, vertical offset, blur radius, color */
-                 0 0 20px #79ff51,
-                 0 0 30px rgb(81, 255, 0),
-                 0 0 50px rgb(255, 255, 255);
-
-  }
+  
 </style>

@@ -10,9 +10,10 @@
     import { auth } from '$lib/firebase.js';
     import { userStore } from 'sveltefire';
     import { writable } from "svelte/store";
-    import { fade, fly } from "svelte/transition";
+    import { fade, fly, slide } from "svelte/transition";
     import { onMount } from 'svelte';
     import { cubicInOut } from 'svelte/easing';
+    import { tasksCompleted } from '../stores/tasks.js';
 
     let authInstance;
     const user = userStore(auth);
@@ -20,6 +21,8 @@
     let name = 'anon';
     let showNameForm = false;
     let showPfps = false;
+    let pfpHover = false;
+    let showSettings = false;
 
     let pfps = [
         { src: '/pfps/cfangKawamii.jpeg', alt: 'default'},
@@ -32,6 +35,7 @@
         { src: '/pfps/pixeladyMiso.png', alt: 'pixeladyMiso'},
         { src: '/pfps/yayoRolex.png', alt: 'yayoRolex'},
         { src: '/pfps/yayoPontiac.png', alt: 'yayoPontiac'},
+        { src: '/pfps/remilia-1.png', alt: 'remilio Logo'},
     ];
     
     let userPfp = pfps[0];
@@ -62,24 +66,33 @@
         showNameForm = !showNameForm;
     }
 
+    function toggleSettings() {
+        showSettings = !showSettings;
+    }
+
     export let signOut;
 </script>
 
 
 <!-- profile button -->
-<div class="fixed top-3 left-6">
+<div 
+    
+    class="fixed top-3 left-6 flex align-top">
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
     <button
+        use:autoAnimate
         on:click={() => showProfile.set(!$showProfile)}
-        class="opacity-80 hover:opacity-100">
+        on:mouseenter={() => pfpHover=true}
+        on:mouseleave={() => pfpHover=false}
+        class="w-12 border-white border-8 border-solid yayo-border-blue lg:w-28 md:w-20 transition-all ease-in-out duration-500">
         <img 
             src={userPfp.src} 
             alt={userPfp.alt} 
-            class="w-12 lg:w-28 md:w-20 border-[0.25rem] border-b-[1.1rem] transition-all ease-in-out duration-300 ">
-            <p class="hidden md:block absolute whitespace-pre-wrap bg-white mt-4 md:left-0 md:-bottom-4 font-input tracking-tighter text-ellipsis py-2 px-4 w-full">{name}</p> 
+            class=" transform transition-all duration-1000 ease-in-out">
     </button>
+   
     
     
     
@@ -89,21 +102,37 @@
 {#if $showProfile}
  <!-- svelte-ignore a11y-click-events-have-key-events -->
  <div
-    on:click={closeProfile} in:fade={{duration: 300, easing: cubicInOut}}
-    class="profile-overlay fixed font-input tracking-tighter text-black inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center">
+    on:click={closeProfile} transition:fade={{duration: 500, easing: cubicInOut}}
+    class="profile-overlay hover:notes-bg fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
     
     <!-- profile modal -->
-    <div class="fixed inset-10 md:inset-15 lg:inset-20 p-5 md:p-10 bg-black transform border-2 rounded-md">
+    <div class="fixed inset-[5vw] p-5 md:p-10 bg-black">
+
+        <!-- back arrow for mobile -->
+        <div class="fixed bg-white text-[5vw] top-6 right-6">
+            <button class="profile-overlay p-3" on:click={closeProfile} transition:slide={{duration: 500, easing: cubicInOut}}>
+                🔙
+            </button>
+        </div>
 
         <!-- header -->
-        <div class="flex flex-row justify-between mb-20">
-            <div>
-                <img src={userPfp.src} alt={userPfp.alt} class="h-[100px] w-auto">
-                <h2 class="text-white font-input tracking-tighter text-2xl">{name}</h2>
+        <div class="">
+            <div class="">
+                <img src={userPfp.src} alt={userPfp.alt} class="h-[10vw]">
+                <h2 class="text-white font-input tracking-tighter text-xl">{name}</h2>
             </div>
-            <button on:click={signOut} class="font-input tracking-tighter text-white hover:text-lime-500">logout</button>
+        </div>
+
+        <!-- info -->
+        <div class="bg-white w-1/3 rounded-xl text-black font-input pb-5 py-20 text-center">
+            <p class="text-8xl">{$tasksCompleted}</p>
+            <p>TASKS COMPLETED</p>
         </div>
         
+        <button on:click={toggleSettings}>⚙️</button>
+
+        {#if showSettings}
+        <div class="settings">
         <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={toggleNameForm}>change name</button>
         <div class="name-form {showNameForm ? '' : 'hidden'}">
             <input use:autoAnimate type="text" id="nameForm" bind:value={name} on:blur={() => setName(name)} class="">
@@ -113,19 +142,21 @@
         <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={togglePfps}>choose pfp</button>
         <!-- pfp options -->
         <div class="pfp-selector {showPfps ? '' : 'hidden'}">
-            <div class="pfp-options flex">
+            <div class="pfp-options flex flex-wrap">
                 {#each pfps as pfp, i}
                     <img 
                         src={pfp.src} 
                         alt={pfp.alt} 
                         on:click={() => changePfp(pfp)}
-                        transition:fade={{delay: i * 100, duration: 250, easing: cubicInOut}} 
-                        class="opacity-30 hover:opacity-100 transform transition-all duration-150 ease-in"> 
+                        class="w-full h-[23vw] opacity-30 hover:opacity-100 transform transition-all duration-150 ease-in"> 
                 {/each}
             </div>
         </div>
         <!-- when selecting pfp it can show up really big -->
         
+    </div>
+    {/if}
+            <button on:click={signOut} class="fixed bottom-11 right-11 lg:bottom-24 lg:right-28 font-input tracking-tighter text-white hover:text-lime-500">logout</button>
     </div>
    
 </div>
@@ -148,12 +179,7 @@
         scrollbar-width: none;  /* Firefox */
     }
 
-    .pfp-options img {
-        width: auto;
-        height: 400px;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
+ 
 
 
 

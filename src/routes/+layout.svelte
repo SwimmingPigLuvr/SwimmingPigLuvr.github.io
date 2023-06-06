@@ -30,8 +30,8 @@
     />
   {/if}
 </div>
-<div class="absolute -space-y-1 flex-col bottom-16 right-0 py-2 px-4 bg-black bg-opacity-30">
-<h3 class="text-white font-input">
+<div class="fixed bottom-3 transform left-1/2 -translate-x-1/2 md:left-auto md:right-3 md:translate-x-0 px-2 py-2 rounded--full bg-black bg-opacity-100">
+<h3 class="text-white text-xs font-input">
     by 
     <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
       <span 
