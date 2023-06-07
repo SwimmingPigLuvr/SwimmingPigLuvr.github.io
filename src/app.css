@@ -77,11 +77,20 @@
                  0 0 50px rgb(255, 255, 255);
   }
 
+  /* borders */
+
+  .border-sunset {
+    transition: border-image 0.5s ease-in-out;
+    transition: border-width 0.5s ease-in-out;
+    border: 2vw solid transparent;
+    border-image: url('images/sunset.png') 30 stretch;
+  }
+
   .yayo-border-blue {
     transition: border-image 0.5s ease-in-out;
     transition: border-width 0.5s ease-in-out;
     border: 1vw solid transparent;
-    border-image: url('borders/blueborder.png') 10 repeat;
+    border-image: url('borders/blueborder.png') 10 repeat; 
   }
 
   .yayo-border-pink {

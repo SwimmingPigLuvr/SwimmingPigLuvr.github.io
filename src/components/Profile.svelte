@@ -103,30 +103,34 @@
  <!-- svelte-ignore a11y-click-events-have-key-events -->
  <div
     on:click={closeProfile} transition:fade={{duration: 500, easing: cubicInOut}}
-    class="profile-overlay hover:notes-bg fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
+    class="profile-overlay bg-sky-300 fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
     
     <!-- profile modal -->
-    <div class="fixed inset-[5vw] p-5 md:p-10 bg-black">
+    <div class="fixed inset-0 lg:inset-x-[20vw] md:inset-[5vw] p-5 md:p-10 bg-black">
 
         <!-- back arrow for mobile -->
-        <div class="fixed bg-white text-[5vw] top-6 right-6">
-            <button class="profile-overlay p-3" on:click={closeProfile} transition:slide={{duration: 500, easing: cubicInOut}}>
-                🔙
+        <div class="fixed bg-white text-[4vw] md:text-[1vw] top-6 right-6">
+            <button 
+                class="profile-overlay p-6 hover:-translate-x-2 transform transition duration-300 ease-in-out" 
+                on:click={closeProfile} 
+                transition:slide={{duration: 500, easing: cubicInOut}}>
+                    <p class="profile-overlay text-[10vw]">⬅️</p>
+                    <p class="profile-overlay font-input font-bold">back</p> 
             </button>
         </div>
 
         <!-- header -->
         <div class="">
             <div class="">
-                <img src={userPfp.src} alt={userPfp.alt} class="h-[10vw]">
+                <img src={userPfp.src} alt={userPfp.alt} class="h-[10vw] fixed left-1/2 -translate-x-1/2">
                 <h2 class="text-white font-input tracking-tighter text-xl">{name}</h2>
             </div>
         </div>
 
-        <!-- info -->
-        <div class="bg-white w-1/3 rounded-xl text-black font-input pb-5 py-20 text-center">
-            <p class="text-8xl">{$tasksCompleted}</p>
-            <p>TASKS COMPLETED</p>
+        <!-- stats -->
+        <div class="bg-white text-sky-400 w-1/3 rounded-xl font-input text-center">
+            <p class="text-8xl ">{$tasksCompleted}</p>
+            <p class="">TASKS COMPLETED</p>
         </div>
         
         <button on:click={toggleSettings}>⚙️</button>
@@ -156,7 +160,12 @@
         
     </div>
     {/if}
-            <button on:click={signOut} class="fixed bottom-11 right-11 lg:bottom-24 lg:right-28 font-input tracking-tighter text-white hover:text-lime-500">logout</button>
+        <button 
+            on:click={signOut} 
+            class="fixed p-6 bg-white text-[1vw] bottom-6 right-6 font-input font-bold tracking-tighter text-black hover:text-sky-500 transform transition-all duration-300 ease-in-out">
+            <p class="text-[2.5vw]">🌸</p>
+            <p>signout</p>
+        </button>
     </div>
    
 </div>

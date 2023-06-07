@@ -164,18 +164,26 @@
 <body>
 
      <!-- login button -->
-    <div class="fixed top-3 left-6 flex flex-col">
+    <div class="fixed bg-white text-[4vw] md:text-[1vw] top-6 left-6 font-input">
         <button 
             on:click={() => showLoginForm.set(!$showLoginForm)}
-            class="text-white text-left hover:text-lime-400 transform transition-all ease-in duration-100 font-input">
+            class="px-6 py-3 items-center flex flex-row md:flex-col space-x-2 justify-end">
                 <span class="">login </span>
+    <!--👈-->    <p class="block md:hidden hover:-translate-x-2 transform transition-all ease-in duration-100 ">👈</p>
+    <!--👆-->    <p class="hidden md:block hover:-translate-y-2 text-[2.5vw] transform transition-all ease-in duration-100 ">👆</p>
         </button>
+
+
+
+
+
+
         <!-- create db -->
-        <button 
+        <!-- <button 
             on:click={createDb}
             class="text-white hover:text-lime-400 transform transition-all ease-in duration-100 font-input">
                 <span class="">click to create db </span>
-        </button>
+        </button> -->
 
         
     </div>
@@ -183,10 +191,10 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
             on:click={closeLogin} transition:fade={{delay: 0, duration: 300}} 
-            class="login-overlay fixed font-input tracking-tighter text-black inset-0 bg-white bg-opacity-100 flex flex-col items-center justify-center">
+            class="login-overlay fixed font-input tracking-tighter text-black inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
 
             <!-- login modal -->
-            <div class="forbidden-bg rounded-t-full border-[15px] p-56">
+            <div class="inset-0 p-16 border-[50vw] border-sunset forbidden-bg">
                 <!-- login/register -->
                 <div>
                     <div class="text-white text-2xl px-3 py-4">

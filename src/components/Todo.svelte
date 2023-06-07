@@ -8,6 +8,8 @@
 
   export const tasksCompleted = writable(0);
 
+  let group;
+
 
 
   // task id
@@ -24,6 +26,8 @@
   // completed item hover
   let isHoveringCompleted: boolean[] = [];
 
+
+
   // Create a writable store to hold the list of todo items
   const completedList = writable<ListItem[]>([]);
 
@@ -31,8 +35,13 @@
     id: number
     title: string
     details: string
+    date: Date | null 
     completed: boolean
-    isHovering: boolean
+  }
+
+  interface TodoList {
+    category: string
+    tasks: ListItem[]
   }
   
   export const todoList = writable<ListItem[]>([]);
@@ -43,17 +52,13 @@
 
   // Function to handle adding a new todo item
   function addTodoItem(event: Event) {
-    event.preventDefault();
-    const todoInput = event.target as HTMLFormElement;
-    const newTodo = todoInput.todo.value.trim();
-    if (newTodo !== '') {
-      todoList.update(items => [...items, { id: idCounter++, title: newTodo, details: newTodo, completed: false, isHovering: false }]);
-      todoInput.reset();
-    }
+    todoList.update(todoList => [...todoList, { id: (todoList.length + 1), title: '', details: '', date: null, completed: false }]);
   }
   
   function countCompleted() {
     tasksCompleted.update(n => n + 1);
+    console.log("task completed!");
+    console.log($tasksCompleted + "total tasks completed");
   }
 
   // function to complete a todo item
@@ -61,6 +66,7 @@
     todoList.update(active => {
       const completedItem = active.splice(index, 1)[0];
       completedList.update(completed => [...completed, completedItem]);
+      countCompleted();
       return active;
     });
   }
@@ -78,16 +84,16 @@
   }
 
   // Function to handle editing a todo item
-  function editTodoItem(index: number, event: Event) {
+  function editTodoItem(index: number, field: string, event: Event) {
     const newText = (event.target as HTMLInputElement).value;
     todoList.update(items => {
       const updatedItems = [...items];
-      updatedItems[index].details = newText;
+      updatedItems[index][field] = newText;
       return updatedItems;
     });
   }
 
-
+export default TodoList;
   
 </script>
 
@@ -118,9 +124,11 @@
 <!-- input task -->
 <div class="mb-4">
   <form on:submit={addTodoItem}>
-    <div class="flex flex-row">
-      <input type="text" name="todo" placeholder="enter an important task" class="placeholder-blue-400 bg-slate-100 hover:bg-slate-200 transition-all duration-300 text-slate-800 flex-1 w-full px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-orange-500">
-      <button type="submit" class="flex-2 ml-2 px-4 py-2 font-input bg-blue-900 text-white hover:bg-sky-200 hover:text-blue-900 transition-all duration-200 text-3xl rounded-md">+</button>
+    <div class="flex justify-start items-end space-x-3">
+      <img src="/images/6198assisstant.png" alt="" class="h-[10vw]">
+      <button type="submit" class="flex flex-row justify-center space-x-4 items-center px-8 py-4 font-input tracking-tighter bg-black text-white hover:bg-white hover:text-black transition-all duration-300 hover:shadow-xl ease-in-out text-[1vw]">
+        Add Task
+      </button>
     </div>
   </form>
   {#if $todoList.length < 1 && $completedList.length > 0}
@@ -142,30 +150,7 @@
       class="space-y-2">
       {#each $todoList as todo, index (todo.id)}
         <li
-          on:mouseover={() => todoList.update(items => {
-            const updatedItems = [...items];
-            updatedItems[index].isHovering = true;
-            return updatedItems;
-          })}
-          on:mouseout={() => todoList.update(items => {
-            const updatedItems = [...items];
-            updatedItems[index].isHovering = false;
-            return updatedItems;
-          })}
-          on:focus={() => todoList.update(items => {
-            const updatedItems = [...items];
-            updatedItems[index].isHovering = true;
-            return updatedItems;
-          })}
-          on:blur={() => todoList.update(items => {
-            const updatedItems = [...items];
-            updatedItems[index].isHovering = false;
-            return updatedItems;
-          })}
-          class="flex flex-row bg-sky-600 hover:bg-sky-400 rounded-lg">
-
-<!-- complete task button -->
-          
+          class="flex flex-row bg-sky-600 rounded-lg">
             <button 
               on:mouseover={() => isHoveringButton[index] = true} 
               on:mouseout={() => isHoveringButton[index] = false} 
@@ -181,22 +166,37 @@
                 {/if}
             </button>
           <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-         
-          <input type="text" 
-            value={todo.details} 
-            on:input={(event) => editTodoItem(index, event)} 
-              class="font-bold font-input text-white w-full px-4 py-2 rounded-md bg-sky-500 bg-opacity-0 focus:outline-none">
+          <div class="flex flex-col space-y-2 p-2">
+            <!-- title -->
+            <input type="text"
+              placeholder="Title"
+              value={todo.title} 
+              on:input={(event) => editTodoItem(index, event)} 
+              class="todo-input">
+            <!-- details -->
+            <input type="text"
+              placeholder="details"
+              value={todo.details} 
+              on:input={(event) => editTodoItem(index, event)} 
+                class="todo-input">
+            <!-- date -->
+            <input type="date"
+              placeholder="date"
+              value={todo.date} 
+              on:input={(event) => editTodoItem(index, event)} 
+                class="todo-input">
+          </div>
             <button 
               on:click={() => removeTodoItem(index)}
               class="hover:-translate-y-0.5 hover:shadow-white mr-2">
                 🗑
             </button>
-         
-         
-      </li>
-    {/each}
-  </ul>
-{/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+
+
 
   <!-- completed tasks -->
   <div class="flex-2 flex-grow flex-shrink">
@@ -208,7 +208,7 @@
     <li 
     class="flex flex-row2 bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md">
   <p class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md">
-    {item.details}
+    {item.title}
   </p>
     <button 
     on:mouseover={() => isHoveringCompleted[index] = true} 
@@ -243,6 +243,23 @@
     background-position: center;
     background-attachment: fixed;
     overflow: hidden;
+  }
+
+  .todo-input {
+    font-weight: bold;
+    font-family: 'input', sans-serif;
+    color: black;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    background-color: white;
+    background-opacity: 0;
+    outline: none;
+    transition: background-opacity 0.2s ease-in-out;
+  }
+
+  .todo-input:focus {
+    background-opacity: 0.2;
   }
 
   
