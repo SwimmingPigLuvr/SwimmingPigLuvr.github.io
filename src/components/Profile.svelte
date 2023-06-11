@@ -77,7 +77,7 @@
 <!-- profile button -->
 <div 
     
-    class="fixed top-3 left-6 flex align-top">
+    class="fixed top-5 left-3 lg:left-2 lg:top-20 flex align-top">
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
@@ -86,11 +86,11 @@
         on:click={() => showProfile.set(!$showProfile)}
         on:mouseenter={() => pfpHover=true}
         on:mouseleave={() => pfpHover=false}
-        class="w-12 border-white border-8 border-solid yayo-border-blue lg:w-28 md:w-20 transition-all ease-in-out duration-500">
+        class="w-[10vw] md:w-[2vw] lg:w-[10vw] transition-all ease-in-out duration-500">
         <img 
             src={userPfp.src} 
             alt={userPfp.alt} 
-            class=" transform transition-all duration-1000 ease-in-out">
+            class="">
     </button>
    
     
@@ -114,7 +114,7 @@
                 class="profile-overlay p-6 hover:-translate-x-2 transform transition duration-300 ease-in-out" 
                 on:click={closeProfile} 
                 transition:slide={{duration: 500, easing: cubicInOut}}>
-                    <p class="profile-overlay text-[10vw]">⬅️</p>
+                    <p class="profile-overlay text-[5vw]">⬅️</p>
                     <p class="profile-overlay font-input font-bold">back</p> 
             </button>
         </div>
@@ -128,12 +128,14 @@
         </div>
 
         <!-- stats -->
-        <div class="bg-white text-sky-400 w-1/3 rounded-xl font-input text-center">
+        <div class="bg-white text-sky-400 w-1/3 rounded-xl p-6 font-input text-center">
             <p class="text-8xl ">{$tasksCompleted}</p>
             <p class="">TASKS COMPLETED</p>
         </div>
         
-        <button on:click={toggleSettings}>⚙️</button>
+        <div class="profile-settings">
+            <button class="text-[2vw] transform transition-all hover:rotate-180 duration-1000 ease-in-out" on:click={toggleSettings}>⚙️</button>
+        </div>
 
         {#if showSettings}
         <div class="settings">
@@ -146,7 +148,7 @@
         <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={togglePfps}>choose pfp</button>
         <!-- pfp options -->
         <div class="pfp-selector {showPfps ? '' : 'hidden'}">
-            <div class="pfp-options flex flex-wrap">
+            <div class="pfp-options flex flex-wrap overflow-y-auto max-h-[50vh]">
                 {#each pfps as pfp, i}
                     <img 
                         src={pfp.src} 
@@ -180,7 +182,7 @@
 
     .pfp-options {
         display: flex;
-        overflow-x: auto;
+        overflow-y: auto;
         white-space: nowrap;
         
         /* Hide scrollbar for IE, Edge and Firefox */

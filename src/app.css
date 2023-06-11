@@ -89,13 +89,18 @@
   .yayo-border-blue {
     transition: border-image 0.5s ease-in-out;
     transition: border-width 0.5s ease-in-out;
-    border: 1vw solid transparent;
     border-image: url('borders/blueborder.png') 10 repeat; 
   }
 
   .yayo-border-pink {
     transition: border-image 0.5s ease-in-out;
     transition: border-width 0.5s ease-in-out;
-    border: 1vw solid transparent;
     border-image: url('borders/pinkborder.png') 10 stretch;
   }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    /* background: url('your-icon-url.png'); */
+    /* background-size: contain; */
+    color: white;
+    cursor: pointer;
+}
