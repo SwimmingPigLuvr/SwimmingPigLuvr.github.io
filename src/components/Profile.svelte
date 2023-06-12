@@ -15,6 +15,11 @@
     import { cubicInOut } from 'svelte/easing';
     import { tasksCompleted } from '../stores/tasks.js';
 
+    // when hovering over the button nav in profile modal i want text to appear in a div neatly placed below
+    let msgBack = false;
+    let msgSettings = false;
+    let msgSignout = false;
+
     let authInstance;
     const user = userStore(auth);
     let showProfile = writable(false);
@@ -70,6 +75,11 @@
         showSettings = !showSettings;
     }
 
+    function toggleBack() {
+        msgBack = !msgBack;
+        console.log("msgBack = " + msgBack);
+    }
+
     export let signOut;
 </script>
 
@@ -86,11 +96,11 @@
         on:click={() => showProfile.set(!$showProfile)}
         on:mouseenter={() => pfpHover=true}
         on:mouseleave={() => pfpHover=false}
-        class="w-[10vw] md:w-[2vw] lg:w-[10vw] transition-all ease-in-out duration-500">
+        class="w-[10vw] md:w-[2vw] lg:w-[10vw] transition-all ease-in-out duration-1000">
         <img 
             src={userPfp.src} 
             alt={userPfp.alt} 
-            class="">
+            class="hover:cursor-">
     </button>
    
     
@@ -112,17 +122,17 @@
 
         <div class="">
             <!-- header -->
-            <div class="flex space-y-6">
-                <img src={userPfp.src} alt={userPfp.alt} class="-z-10 w-screen  yayo-border-blue border-[13vw]">
-                <h2 class="z-10 text-white font-input tracking-tighter text-xl">{name}</h2>
+            <div class="flex flex-col space-y-6">
+                <img src={userPfp.src} alt={userPfp.alt} class="-z-10 w-[50vw]  yayo-border-blue border-[3vw]">
+                <h2 class="z-10 text-white font-input tracking-tighter text-[10vw]">{name}</h2>
             </div>
         </div>
 
         <!-- stats -->
-        <div class="bg-white text-sky-400 w-1/3 rounded-xl p-6 font-input text-center">
+        <!-- <div class="bg-white text-sky-400 w-1/3 rounded-xl p-6 font-input text-center">
             <p class="text-8xl ">{$tasksCompleted}</p>
             <p class="">TASKS COMPLETED</p>
-        </div>
+        </div> -->
         
         {#if showSettings}
         <div class="settings">
@@ -150,31 +160,47 @@
     </div>
     {/if}
 
-    <!-- profile modal buttons (denoted by emojis) -->
+    <!-- nav buttons (denoted by emojis) -->
     <!-- back arrow for mobile -->
-    <div class="z-40 flex flex-row space-x-3 fixed bottom-0 left-1/2 -translate-x-1/2 text-stone-100 text-[3vw] md:text-[1vw] font-input font-bold tracking-tighter">
+    <div class="z-40 flex flex-row space-x-3 fixed top-3 right-3 text-stone-100 font-input font-bold tracking-tighter">
         <button 
-            class="profile-overlay hover:-translate-x-2 transform transition duration-300 ease-in-out" 
-            on:click={closeProfile} 
+            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out" 
+            on:click={closeProfile}
+            
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
-                <p class="profile-overlay text-[6vw]">⬅️</p>
+                <p class="profile-overlay">⬅️</p>
         </button>
   
         <button 
-            class="profile-overlay  " 
-            on:click={closeProfile} 
+            on:click={toggleSettings} 
+            
+            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out"
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
-                <p class="profile-overlay text-[6vw] hover:rotate-180 transform transition duration-300 ease-in-out">⚙️️</p>
+                <p>⚙️️</p>
         </button>
 
         <button 
             on:click={signOut} 
+            
             transition:slide={{duration: 500, easing: cubicInOut}}
-            class="hover:text-sky-500 transform transition-all duration-300 ease-in-out">
-            <p class="text-[6vw]">🌸</p>
+            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out">
+            <p>🌸</p>
         </button> 
+
+        <!-- hover button nav text -->
+        <div class="z-50 text-white font-input tracking-tighter text-[20vw]">
+            {#if showNameForm}
+                <p class="text-white text-[10vw]">back</p>
+            {/if}
+            {#if msgSettings}
+                <p>settings</p>
+            {/if}
+            {#if msgSignout}
+                <p>signout</p>
+            {/if}
+        </div>
         </div>
     </div>
    

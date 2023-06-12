@@ -82,8 +82,13 @@
   .border-sunset {
     transition: border-image 0.5s ease-in-out;
     transition: border-width 0.5s ease-in-out;
-    border: 2vw solid transparent;
-    border-image: url('images/sunset.png') 30 stretch;
+    border-image: url('images/sunset.png') 100;
+  }
+
+  .border-art-gang-money {
+    transition: border-image 0.5s ease-in-out;
+    transition: border-width 0.5s ease-in-out;
+    border-image: url('images/artgangmoney.jpeg');
   }
 
   .yayo-border-blue {

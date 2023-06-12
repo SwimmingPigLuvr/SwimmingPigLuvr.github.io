@@ -164,19 +164,15 @@
 <body>
 
      <!-- login button -->
-    <div class="fixed bg-white text-[4vw] md:text-[1vw] top-6 left-6 font-input">
+    <div class="fixed hover:animate-bounce bg-white text-[4vw] md:text-[1vw] top-6 left-6 font-input">
         <button 
             on:click={() => showLoginForm.set(!$showLoginForm)}
-            class="px-6 py-3 items-center flex flex-row md:flex-col space-x-2 justify-end">
-                <span class="">login </span>
-    <!--👈-->    <p class="block md:hidden hover:-translate-x-2 transform transition-all ease-in duration-100 ">👈</p>
-    <!--👆-->    <p class="hidden md:block hover:-translate-y-2 text-[2.5vw] transform transition-all ease-in duration-100 ">👆</p>
+            class="px-6  py-2 items-center flex flex-row md:flex-col space-x-8 justify-end">
+                login
+<!--👈-->   <p class="block md:hidden">👈</p>
+<!--👆-->   <p class="hidden md:block animate-bounce">👆</p>
         </button>
-
-
-
-
-
+    </div>
 
         <!-- create db -->
         <!-- <button 
@@ -186,15 +182,15 @@
         </button> -->
 
         
-    </div>
+    
     {#if $showLoginForm}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
             on:click={closeLogin} transition:fade={{delay: 0, duration: 300}} 
-            class="login-overlay fixed font-input tracking-tighter text-black inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
+            class="z-10 login-overlay fixed font-input tracking-tighter text-black inset-0 bg-rose-400 bg-opacity-100 flex flex-col items-center justify-center">
 
             <!-- login modal -->
-            <div class="inset-0 p-16 border-[50vw] border-sunset forbidden-bg">
+            <div class="inset-0 p-16 forbidden-bg">
                 <!-- login/register -->
                 <div>
                     <div class="text-white text-2xl px-3 py-4">
@@ -224,7 +220,7 @@
                             <input 
                                 id="password" 
                                 bind:value={password} 
-                                placeholder="password" 
+                                placeholder="must be 6 characters" 
                                 autocomplete="current-password" 
                                 class="boder-2 border-transparent hover:border-white w-full px-3 py-2 bg-black text-white border rounded-md" 
                                 type="password" required>

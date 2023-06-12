@@ -1,3 +1,19 @@
+ <!-- login button cant be clicked in lg breakpoint -->
+
+<!-- todo list -->
+<!-- important links -->
+<!-- fix task must be titled error:
+        right now when i get that error it doesn't go away -->
+<!-- fix add task button -->
+<!-- get rid of scroll bar for todo list -->
+<!-- add categories -->
+<!-- style all break points -->
+<!-- fix profile modal:
+        right now the settings button opens the profile settings but it also closes the modal -->
+
+
+
+
 <script lang="ts">
   import "../app.css";
   import { onMount } from 'svelte';
@@ -7,7 +23,6 @@
   import { fade } from "svelte/transition";
   import { afterUpdate } from "svelte";
 
-  let todoHover = false;
 
   // Create a writable store to hold the list of todo items
   const completedList = writable<ListItem[]>([]);
@@ -94,6 +109,9 @@
   });
 
   // button hovers
+  let todoHover: boolean[] = [];
+  // add task hover
+  let addHover = false;
   // complete task
   let isHoveringButton: boolean[] = [];
   // delete item hover
@@ -160,16 +178,24 @@ export default TodoList;
   
 <!-- container wrapper -->
 <!-- add task -->
-<div class="parent relative">
+<div class="parent relative z-0">
 <div class="add-task-button absolute right-3 -top-14 md:right-6 lg:top-0">
   <form on:submit={addTodoItem} class="w-full m-auto">
-    <div class="">
       <button type="submit" 
-        class="w-[10vw] h-[10vw] lg:h-[3vw] lg:w-[8vw] border-white border-8 bg-black text-white text-[4vw] hover:border-2 font-input 
-        tracking-tighter hover:bg-sky-500 hover:text-[6vw] hover:text-yellow-300 transform transition-all ease-in-out duration-250">
+        on:mouseenter={() => addHover = true}
+        on:mouseleave={() => addHover = false}
+        on:focus={() => addHover = true}
+        on:blur={() => addHover = false}
+        class="p-1 leading-tight w-[10vw] h-[10vw] lg:h-[3vw] lg:w-[8vw] bg-black text-white text-[2vw] font-input-compressed tracking-tighter
+        yayo-border-pink border-r-[1vw] border-l-[1vw] border-b-[3vw] border-t-[1vw] 
+        hover:border-r-[2vw] hover:border-l-[2vw] hover:border-t-[2vw] hover:border-b-[4vw]
+        transform transition-all ease-in-out duration-100">
+        {#if addHover === false}
+        add
+        {:else}
         +
+        {/if}
       </button>
-    </div>
   </form>
 </div>
 <!-- main container -->
@@ -200,18 +226,19 @@ export default TodoList;
   <div class="">
   {#if $todoList.length > 0}
     <ul 
-      use:autoAnimate={{duration: 150}}
+      use:autoAnimate={{duration: 300}}
       class="flex justify-between flex-wrap overflow-y-auto m-2">
       {#each $todoList as todo, index (todo.id)}
         <li
-          use:autoAnimate
+          use:autoAnimate={{duration: 100}}
           on:mouseenter={() => todoHover[index] = true}
           on:mouseleave={() => todoHover[index] = false}
           on:focus={() => todoHover[index] = true}
           on:blur={() => todoHover[index] = false}
           class="w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500">
-            {#if todoHover}
-            <div class="todo-buttons mx-4 items-center text-[10vw] flex justify-between">
+            {#if todoHover[index]}
+            <div 
+              class="todo-buttons absolute top-0 right-3 items-center space-x-2 text-[5vw] flex justify-end">
             <button 
               on:mouseover={() => isHoveringButton[index] = true} 
               on:mouseout={() => isHoveringButton[index] = false} 
@@ -219,7 +246,7 @@ export default TodoList;
               on:blur={() => isHoveringButton[index] = false} 
               tabindex="0"
               on:click={() => {completeTodoItem(index); countCompleted}} 
-              class="">
+            >
                 {#if isHoveringButton[index]}
                   <span>✅</span>
                 {:else}
