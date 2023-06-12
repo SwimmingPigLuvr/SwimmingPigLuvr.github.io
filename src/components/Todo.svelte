@@ -7,6 +7,7 @@
   import { fade } from "svelte/transition";
   import { afterUpdate } from "svelte";
 
+  let todoHover = false;
 
   // Create a writable store to hold the list of todo items
   const completedList = writable<ListItem[]>([]);
@@ -32,6 +33,7 @@
 
   export const tasksCompleted = writable(0);
   export const showWarning = writable(false);
+  export const showCannotComplete = writable(false);
 
   let group;
   let showSpeech = false;
@@ -47,6 +49,9 @@
       // Update the value of the last item title
       if(currentTodoList.length > 0) {
           lastTodoItemTitle = currentTodoList[currentTodoList.length - 1].title;
+      }
+      if(lastTodoItemTitle) {
+
       }
   });
 
@@ -107,12 +112,16 @@
 
   // function to complete a todo item
   function completeTodoItem(index: number) {
+    if ($todoList[index].title === "") {
+      showCannotComplete.set(true);
+    } else {
     todoList.update(active => {
       const completedItem = active.splice(index, 1)[0];
       completedList.update(completed => [...completed, completedItem]);
       countCompleted();
       return active;
     });
+    }
   }
 
   // delete todo
@@ -156,8 +165,8 @@ export default TodoList;
   <form on:submit={addTodoItem} class="w-full m-auto">
     <div class="">
       <button type="submit" 
-        class="w-[10vw] h-[10vw] lg:h-[3vw] lg:w-[8vw] bg-black text-white text-[2vw] font-input tracking-tighter hover:bg-rose-300 
-        hover:text-black transform transition-all ease-in-out duration-250">
+        class="w-[10vw] h-[10vw] lg:h-[3vw] lg:w-[8vw] border-white border-8 bg-black text-white text-[4vw] hover:border-2 font-input 
+        tracking-tighter hover:bg-sky-500 hover:text-[6vw] hover:text-yellow-300 transform transition-all ease-in-out duration-250">
         +
       </button>
     </div>
@@ -167,10 +176,14 @@ export default TodoList;
 <div class="max-h-[85vh] mx-3 my-20 lg:my-6 md:mx-6 lg:mx-48 flex flex-col p-2 md:p-8 bg-white border-[3vw] md:border-[2vw] lg:border-[1vw] yayo-border-blue overflow-y-auto">
   
 
+<!-- messages -->
 <div class="messages text-6xl md:text-6xl lg:text-8xl">
   
   {#if $showWarning}
     <p class="font-input tracking-tighter font-bold text-lime-300">PLEASE FILL OUT FIRST TASK BEFORE CREATING NEW ONE</p>
+  {/if}
+  {#if $showCannotComplete}
+    <p class="font-input tracking-tighter font-bold text-rose-300">TASK MUST BE TITLED BEFORE COMPLETING</p>
   {/if}
   {#if $todoList.length < 1 && $completedList.length > 0}
   <p class="font-input tracking-tighter font-bold text-sky-300">All tasks complete. Good Job</p>
@@ -188,11 +201,17 @@ export default TodoList;
   {#if $todoList.length > 0}
     <ul 
       use:autoAnimate={{duration: 150}}
-      class="flex justify-between  flex-wrap overflow-y-auto m-2">
+      class="flex justify-between flex-wrap overflow-y-auto m-2">
       {#each $todoList as todo, index (todo.id)}
         <li
-          class="w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-600">
-            <div class="todo-buttons pt-2 flex space-x-1 justify-start">
+          use:autoAnimate
+          on:mouseenter={() => todoHover[index] = true}
+          on:mouseleave={() => todoHover[index] = false}
+          on:focus={() => todoHover[index] = true}
+          on:blur={() => todoHover[index] = false}
+          class="w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500">
+            {#if todoHover}
+            <div class="todo-buttons mx-4 items-center text-[10vw] flex justify-between">
             <button 
               on:mouseover={() => isHoveringButton[index] = true} 
               on:mouseout={() => isHoveringButton[index] = false} 
@@ -200,9 +219,9 @@ export default TodoList;
               on:blur={() => isHoveringButton[index] = false} 
               tabindex="0"
               on:click={() => {completeTodoItem(index); countCompleted}} 
-              class="ml-2 text-[3vw] align-top">
+              class="">
                 {#if isHoveringButton[index]}
-                  <span>💖</span>
+                  <span>✅</span>
                 {:else}
                   <span>🔘</span>
                 {/if}
@@ -214,7 +233,7 @@ export default TodoList;
               on:blur={() => isHoveringDelete[index] = false}
               tabindex="0"
               on:click={() => removeTodoItem(index)}
-              class="mr-1 text-[3vw]">
+              class="">
                 {#if isHoveringDelete[index]}
                   <span>❌</span>
                 {:else}
@@ -222,27 +241,32 @@ export default TodoList;
                 {/if}
             </button>
           </div>
+          {/if}
           <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-          <div class="flex flex-col space-y-2 p-2 w-full">
+          <div class="flex flex-col space-y-2 px-4 py-3 font-input tracking-tighter text-white  w-full">
             <!-- title -->
-            <input type="text"
+            <label for="todoTitle-{index}">Title</label>
+            <input 
+              id="todoTitle-{index}"
+              type="text"
               bind:this={titleInput}
-              placeholder="Title"
               value={todo.title} 
               on:input={(event) => editTodoItem(index, 'title', event)} 
-              class="placeholder:text-white text-[2vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 rounded-md outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200">
+              class="text-[2vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200">
             <!-- details -->
+            <label for="todoDetails-{index}">Details</label>
             <textarea
-              placeholder="details"
+              id="todoDetails-{index}"
               bind:value={todo.details} 
               on:input={(event) => editTodoItem(index, 'details', event)} 
-                class="placeholder:text-white text-[1vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 rounded-md outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"></textarea>
+                class="placeholder:text-white text-[1.5vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"></textarea>
             <!-- date -->
+            <label for="todoDate-{index}">Date</label>
             <input type="date"
-              placeholder="date"
+              id="todoDate-{index}"
               value={todo.date} 
               on:input={(event) => editTodoItem(index, 'date', event)} 
-                class="text-[1vw] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 rounded-md outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200">
+                class="text-[2vw] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200">
           </div>
             
         </li>

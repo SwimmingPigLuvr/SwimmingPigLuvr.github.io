@@ -34,6 +34,7 @@
       <Todo />
     {:else}
       <Login />
+      <Todo />
     {/if}
   </body>
   

@@ -77,7 +77,7 @@
 <!-- profile button -->
 <div 
     
-    class="fixed top-5 left-3 lg:left-2 lg:top-20 flex align-top">
+    class="z-20 fixed top-5 left-3 lg:left-2 lg:top-20 flex align-top">
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
@@ -103,27 +103,18 @@
  <!-- svelte-ignore a11y-click-events-have-key-events -->
  <div
     on:click={closeProfile} transition:fade={{duration: 500, easing: cubicInOut}}
-    class="profile-overlay bg-sky-300 fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
+    class="z-20 profile-overlay bg-sky-300 fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
     
     <!-- profile modal -->
-    <div class="fixed inset-0 lg:inset-x-[20vw] md:inset-[5vw] p-5 md:p-10 bg-black">
+    <div class="z-30 fixed inset-0 lg:inset-x-[20vw] md:inset-[5vw] p-5 md:p-10 bg-black">
 
-        <!-- back arrow for mobile -->
-        <div class="fixed bg-white text-[4vw] md:text-[1vw] top-6 right-6">
-            <button 
-                class="profile-overlay p-6 hover:-translate-x-2 transform transition duration-300 ease-in-out" 
-                on:click={closeProfile} 
-                transition:slide={{duration: 500, easing: cubicInOut}}>
-                    <p class="profile-overlay text-[5vw]">⬅️</p>
-                    <p class="profile-overlay font-input font-bold">back</p> 
-            </button>
-        </div>
+        
 
-        <!-- header -->
         <div class="">
-            <div class="">
-                <img src={userPfp.src} alt={userPfp.alt} class="h-[10vw] fixed left-1/2 -translate-x-1/2">
-                <h2 class="text-white font-input tracking-tighter text-xl">{name}</h2>
+            <!-- header -->
+            <div class="flex space-y-6">
+                <img src={userPfp.src} alt={userPfp.alt} class="-z-10 w-screen  yayo-border-blue border-[13vw]">
+                <h2 class="z-10 text-white font-input tracking-tighter text-xl">{name}</h2>
             </div>
         </div>
 
@@ -133,10 +124,6 @@
             <p class="">TASKS COMPLETED</p>
         </div>
         
-        <div class="profile-settings">
-            <button class="text-[2vw] transform transition-all hover:rotate-180 duration-1000 ease-in-out" on:click={toggleSettings}>⚙️</button>
-        </div>
-
         {#if showSettings}
         <div class="settings">
         <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={toggleNameForm}>change name</button>
@@ -162,12 +149,33 @@
         
     </div>
     {/if}
+
+    <!-- profile modal buttons (denoted by emojis) -->
+    <!-- back arrow for mobile -->
+    <div class="z-40 flex flex-row space-x-3 fixed bottom-0 left-1/2 -translate-x-1/2 text-stone-100 text-[3vw] md:text-[1vw] font-input font-bold tracking-tighter">
+        <button 
+            class="profile-overlay hover:-translate-x-2 transform transition duration-300 ease-in-out" 
+            on:click={closeProfile} 
+            transition:slide={{duration: 500, easing: cubicInOut}}
+        >
+                <p class="profile-overlay text-[6vw]">⬅️</p>
+        </button>
+  
+        <button 
+            class="profile-overlay  " 
+            on:click={closeProfile} 
+            transition:slide={{duration: 500, easing: cubicInOut}}
+        >
+                <p class="profile-overlay text-[6vw] hover:rotate-180 transform transition duration-300 ease-in-out">⚙️️</p>
+        </button>
+
         <button 
             on:click={signOut} 
-            class="fixed p-6 bg-white text-[1vw] bottom-6 right-6 font-input font-bold tracking-tighter text-black hover:text-sky-500 transform transition-all duration-300 ease-in-out">
-            <p class="text-[2.5vw]">🌸</p>
-            <p>signout</p>
-        </button>
+            transition:slide={{duration: 500, easing: cubicInOut}}
+            class="hover:text-sky-500 transform transition-all duration-300 ease-in-out">
+            <p class="text-[6vw]">🌸</p>
+        </button> 
+        </div>
     </div>
    
 </div>
