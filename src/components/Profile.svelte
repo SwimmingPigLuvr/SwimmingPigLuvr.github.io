@@ -77,7 +77,12 @@
 
     function toggleBack() {
         msgBack = !msgBack;
-        console.log("msgBack = " + msgBack);
+    }
+    function toggleSettingsMsg() {
+        msgSettings = !msgSettings;
+    }
+    function toggleSignout() {
+        msgSignout = !msgSignout;
     }
 
     export let signOut;
@@ -87,7 +92,8 @@
 <!-- profile button -->
 <div 
     
-    class="z-20 fixed top-5 left-3 lg:left-2 lg:top-20 flex align-top">
+    class="z-20 fixed top-[1rem] left-3 md:left-6 lg:left-2 lg:top-20 flex align-top"
+    >
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
@@ -96,11 +102,13 @@
         on:click={() => showProfile.set(!$showProfile)}
         on:mouseenter={() => pfpHover=true}
         on:mouseleave={() => pfpHover=false}
-        class="w-[10vw] md:w-[2vw] lg:w-[10vw] transition-all ease-in-out duration-1000">
+        class=" ">
         <img 
             src={userPfp.src} 
             alt={userPfp.alt} 
-            class="hover:cursor-">
+            class="h-[4rem] w-auto 
+             transition-all ease-in-out duration-1000"
+        >
     </button>
    
     
@@ -166,16 +174,22 @@
         <button 
             class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out" 
             on:click={closeProfile}
-            
+            on:mouseover={toggleBack}
+            on:mouseleave={toggleBack}
+            on:focus={toggleBack}
+            on:blur={toggleBack}
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
                 <p class="profile-overlay">⬅️</p>
         </button>
   
         <button 
+            class="text-[4vw] hover:scale-150 text-white transform transition-all duration-300 ease-in-out"
             on:click={toggleSettings} 
-            
-            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out"
+            on:mouseover={toggleSettingsMsg}
+            on:mouseleave={toggleSettingsMsg}
+            on:focus={toggleSettingsMsg}
+            on:blur={toggleSettingsMsg}
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
                 <p>⚙️️</p>
@@ -183,22 +197,32 @@
 
         <button 
             on:click={signOut} 
-            
+            on:mouseover={toggleSignout}
+            on:mouseleave={toggleSignout}
+            on:focus={toggleSignout}
+            on:blur={toggleSignout}
             transition:slide={{duration: 500, easing: cubicInOut}}
-            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out">
+            class="text-[4vw] hover:scale-150 text-white transform transition-all duration-300 ease-in-out">
             <p>🌸</p>
         </button> 
 
         <!-- hover button nav text -->
-        <div class="z-50 text-white font-input tracking-tighter text-[20vw]">
-            {#if showNameForm}
-                <p class="text-white text-[10vw]">back</p>
+        <div 
+            class="z-50 text-white text-[5vw] absolute top-8 right-0 font-input tracking-tighter">
+            {#if msgBack}
+                <p 
+                transition:fade={{duration: 200}}
+                >back</p>
             {/if}
             {#if msgSettings}
-                <p>settings</p>
+                <p
+                in:fade={{duration: 200}}
+                >settings</p>
             {/if}
             {#if msgSignout}
-                <p>signout</p>
+                <p
+                transition:fade={{duration: 200}}
+                >signout</p>
             {/if}
         </div>
         </div>

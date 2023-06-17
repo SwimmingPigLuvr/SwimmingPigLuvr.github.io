@@ -17,7 +17,7 @@
 
 
 <div 
-  class="min-w-full fixed bottom-0 -left-28 transition-transform duration-300"
+  class="z-50 min-w-full fixed bottom-0 -left-28 transition-transform duration-300"
   style={`transform: translateY(${hover ? hoverPositions[hoverCount] : 100}%)`}
   >
   {#if hover}
@@ -30,8 +30,10 @@
     />
   {/if}
 </div>
-<div class="fixed bottom-3 transform left-1/2 -translate-x-1/2 md:left-auto md:right-3 md:translate-x-0 px-2 py-2 rounded--full bg-black bg-opacity-100">
-<h3 class="text-white text-xs font-input">
+<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 px-6 py-2 sunset-bg opacity-0 hover:opacity-100
+  transform transition-all duration-1000 ease-in-out text-white text-xs text-opacity-0 font-input
+  hover:text-opacity-100">
+<h3 class="">
     by 
     <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
       <span 

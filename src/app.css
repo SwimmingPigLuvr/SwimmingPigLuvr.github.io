@@ -11,16 +11,38 @@
   }
 
   .glow:hover {
-    text-shadow: 0 0 10px rgb(85, 255, 0), /* horizontal offset, vertical offset, blur radius, color */
-                 0 0 20px #79ff51,
-                 0 0 30px rgb(81, 255, 0),
+    text-shadow: 0 0 10px rgb(0, 0, 0), /* horizontal offset, vertical offset, blur radius, color */
+                 0 0 20px #000000,
+                 0 0 30px rgb(0, 0, 0),
+                 0 0 50px rgb(0, 0, 0);
+  }
+
+  .glow-white {
+    transition: text-shadow 0.2s ease-in;
+    text-shadow: 0 0 10px rgb(0, 0, 0), /* horizontal offset, vertical offset, blur radius, color */
+                 0 0 20px rgb(0, 0, 0),
+                 0 0 30px #000000,
+                 0 0 40px #000000;
+  }
+
+  .glow-white:hover {
+    text-shadow: 0 0 10px rgb(255, 255, 255), /* horizontal offset, vertical offset, blur radius, color */
+                 0 0 20px rgb(255, 255, 255),
+                 0 0 30px rgb(255, 255, 255),
                  0 0 50px rgb(255, 255, 255);
+    
   }
 
 .notes-bg {
     background-image: url('/images/notes.png');
     background-size: cover;
     background-position: center;
+}
+
+.shelby-bg {
+  background-image: url('/images/shelby.webp');
+  background-size: cover;
+  background-position: center;
 }
 
 
@@ -98,8 +120,6 @@
   }
 
   .yayo-border-pink {
-    transition: border-image 0.5s ease-in-out;
-    transition: border-width 0.5s ease-in-out;
     border-image: url('borders/pinkborder.png') 10 stretch;
   }
 

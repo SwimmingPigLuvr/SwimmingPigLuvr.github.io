@@ -164,12 +164,12 @@
 <body>
 
      <!-- login button -->
-    <div class="fixed hover:animate-bounce bg-white text-[4vw] md:text-[1vw] top-6 left-6 font-input">
+    <div class="transform transition-all duration-200 ease-in-out fixed hover:bg-white hover:border-transparent border-black border-4 bg-opacity-0 text-[2vw] md:text-[1vw] top-3 left-3 font-input">
         <button 
             on:click={() => showLoginForm.set(!$showLoginForm)}
-            class="px-6  py-2 items-center flex flex-row md:flex-col space-x-8 justify-end">
-                login
-<!--👈-->   <p class="block md:hidden">👈</p>
+            class=" px-6 py-2 items-center flex flex-row md:flex-col space-x-2 justify-end">
+                <p>login</p>
+<!--👈-->   <p class="block md:hidden ">👈</p>
 <!--👆-->   <p class="hidden md:block animate-bounce">👆</p>
         </button>
     </div>
