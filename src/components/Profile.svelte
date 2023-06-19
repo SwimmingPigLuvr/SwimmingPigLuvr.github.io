@@ -100,8 +100,6 @@
     <button
         use:autoAnimate
         on:click={() => showProfile.set(!$showProfile)}
-        on:mouseenter={() => pfpHover=true}
-        on:mouseleave={() => pfpHover=false}
         class=" ">
         <img 
             src={userPfp.src} 
@@ -116,7 +114,6 @@
     
 </div>
 
-    <!-- on:click={closeProfile} transition:slide={{duration: 1000, easing: cubicInOut}} -->
 {#if $showProfile}
  <!-- svelte-ignore a11y-click-events-have-key-events -->
  <div
@@ -131,7 +128,22 @@
         <div class="">
             <!-- header -->
             <div class="flex flex-col space-y-6">
-                <img src={userPfp.src} alt={userPfp.alt} class="-z-10 w-[50vw]  yayo-border-blue border-[3vw]">
+                <div class="image-container w-[10rem] h-[10rem] yayo-border-blue border-[1rem]" 
+                    on:mouseenter={() => pfpHover=true} 
+                    on:mouseleave={() => pfpHover=false}>
+                    {#if pfpHover}
+                    <img 
+                        transition:fade
+                        src='images/BlanK.png' 
+                        alt={userPfp.alt}
+                        class="absolute z-20 w-[8rem] h-[8rem]">
+                    {/if}
+                    <img 
+                        transition:slide
+                        src={userPfp.src} 
+                        alt={userPfp.alt}
+                        class="absolute w-[8rem] h-[8rem]">
+                </div>
                 <h2 class="z-10 text-white font-input tracking-tighter text-[10vw]">{name}</h2>
             </div>
         </div>

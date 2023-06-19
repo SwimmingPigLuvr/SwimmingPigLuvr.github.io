@@ -25,6 +25,7 @@
   let currentList = 'Main Tasks';
   let newList = '';
   let showLists = false;
+  let showCreateList = false;
 
   function selectList(list) {
     currentList = list;
@@ -33,11 +34,17 @@
   
 
   // list construction 🚧
-  function addList() {
-    if (newList && !lists.includes(newList)) {
-      lists = [...lists, newList];
+  function addList(event) {
+    event.preventDefault();
+    console.log("add list attempt")
+
+    if (newList.trim() !== '' && !lists.includes(newList.trim())) {
+      lists.push(newList);
+      console.log("success:" + lists);
+      // lists = [...lists, newList];
       currentList = newList;
       newList = '';
+      showCreateList = false;
     }
   }
   // list construction 🚧
@@ -189,6 +196,13 @@
         }
     }
 
+  const closeCreateList = (event) => {
+    event.stopPropagation();
+    if (event.target.classList.contains('create-list-overlay')) {
+      showCreateList = !showCreateList;
+    }
+  }
+
 </script>
 
 <body class="bg-lime-400">
@@ -245,14 +259,14 @@
     
   <!-- lists modal -->
     <div transition:slide={{duration: 500}} 
-      class="absolute left-1/2 top-20 -translate-x-1/2 w-[16rem] border-white border-t-0 border-2 
-      bg-black bg-opacity-100
-        flex flex-col p-2 space-y-4 items-center font-input text-xl tracking-tighter text-white">
+      class="absolute left-1/2 top-20 -translate-x-1/2 w-[16rem] border-white  border-2 
+      bg-black flex flex-col p-4 space-y-4 items-center font-input 
+      text-xl tracking-tighter text-white">
       
       <!-- lists -->
-      <ul>
+      <ul class="space-y-2">
         {#each lists as list (list)} 
-        <div class="flex flex-row item-center justify-center space-x-3">
+        <div class="flex flex-row item-center justify-center space-x-2">
           {#if list != currentList}
           {#if list === 'Favorites'}
           <img 
@@ -260,7 +274,7 @@
           alt="remilia corporation logo" 
           class="w-[1.5rem] h-[1.5rem]">
           {/if}
-          <option on:click={() => selectList(list)} class="glow-white" value="">{list}</option>
+          <option on:click={() => {selectList(list); closeList} } class="list-overlay glow-white" value="">{list}</option>
           {#if list === 'Favorites'}
           <img 
           src="/pfps/remilia-1.png" 
@@ -272,10 +286,46 @@
         {/each}
       </ul>
       <!-- create list -->
-        <hr class="border-2 yayo-border-blue w-full ">
-        <h3 class="glow-white">Create New List</h3>
+        <button on:click={() => showCreateList = !showCreateList} class="glow-white">Create New List</button>
     </div>
   <!-- lists modal -->
+
+  <!-- create new list modal -->
+  {#if showCreateList}
+    <div
+      on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
+      class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90
+      flex flex-col"
+    >
+      <div
+        transition:slide={{duration: 1000, easing: cubicInOut}}
+        class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 
+        border-white border-2 bg-black flex flex-col p-6 space-y-8
+         font-input text-xl tracking-tighter text-white w-[20rem]"
+      >
+        <form on:submit|preventDefault={addList} class="flex flex-col space-y-4">
+          <label for="List">Create New List</label>
+          <input 
+            type="text" name="List" id="List" placeholder="Very Important Tasks"
+            bind:value={newList}
+            class="text-[1rem] p-2 bg-white bg-opacity-20"
+            >
+            <div class="flex flex-row justify-end space-x-6
+              text-[0.81rem] pt-6">
+              <!-- cancel -->
+              <button on:click|preventDefault={closeCreateList} class="create-list-overlay">Cancel</button>
+              <!-- done -->
+              <button type="submit" class="text-lime-400">Done</button>
+            </div>
+            
+
+        </form>
+      </div>
+      
+    </div>
+  {/if}
+  <!-- create new list modal -->
+
 
   </div>
   {/if}
@@ -335,7 +385,7 @@
         {/if}
       </div>
 
-      <!-- important tasks container -->
+      <!-- tasks container -->
       <div class="">
         <!-- tasks list -->
         <div class="">
@@ -346,35 +396,26 @@
             >
               {#each $todoList as todo, index (todo.id)}
                 <li
-                  use:autoAnimate={{ duration: 100 }}
                   on:mouseenter={() => (todoHover[index] = true)}
                   on:mouseleave={() => (todoHover[index] = false)}
                   on:focus={() => (todoHover[index] = true)}
                   on:blur={() => (todoHover[index] = false)}
                   class="w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500"
                 >
+                <!-- task buttons: favorite, complete, delete, more? -->
                   {#if todoHover[index]}
                     <div
-                      class="todo-buttons absolute top-2 right-4 items-center space-x-3 text-3xl flex justify-end"
+                      class="todo-buttons absolute top-4 right-8 items-center space-x-3 text-3xl flex justify-end"
                     >
-                    <!-- favorite task -->
-                      <button 
-                        on:mouseover={() => (isHoveringFavorite[index] = true)}
-                        on:mouseout={() => (isHoveringFavorite[index] = false)}
-                        on:focus={() => (isHoveringFavorite[index] = true)}
-                        on:blur={() => (isHoveringFavorite[index] = false)}
-                        tabindex="0"
-                        on:click={() => {addToFavorites(index)}}
-                      >
-                      <img 
-                      src="/pfps/remilia-1.png" 
-                      alt="remilia corporation logo" 
-                      class="w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0
-                      transform transition-all duration-300 ease-in">
-                      
-
+                    <!-- favorite button -->
+                      <button>
+                        <img 
+                        src="/pfps/remilia-1.png" 
+                        alt="remilia corporation logo" 
+                        class="w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0
+                        transform transition-all duration-300 ease-in">
                       </button>
-                    <!-- complete task -->
+                    <!-- complete button -->
                       <button
                         on:mouseover={() => (isHoveringButton[index] = true)}
                         on:mouseout={() => (isHoveringButton[index] = false)}
@@ -393,7 +434,7 @@
                         {/if}
                       </button>
                       
-                      <!-- delete task -->
+                      <!-- delete button -->
                       <button
                         on:mouseover={() => (isHoveringDelete[index] = true)}
                         on:mouseout={() => (isHoveringDelete[index] = false)}
@@ -477,7 +518,7 @@
                     on:blur={() => (isHoveringDeleteCompleted[index] = false)}
                     tabindex="0"
                     on:click={() => removeCompletedItem(index)}
-                    class="mr-1 text-[3vw]"
+                    class="mr-2 text-[3vw]"
                   >
                     {#if isHoveringDeleteCompleted[index]}
                       <span>🚮</span>
