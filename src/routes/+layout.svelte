@@ -6,16 +6,49 @@
 <script>
   import { fade } from 'svelte/transition';
   import "../app.css"
+  import Todo from '../components/Todo.svelte';
+  import Login from '../components/Login.svelte';
+  import Profile from '../components/Profile.svelte';
+  import { userStore } from 'sveltefire';
+  import { auth } from '$lib/firebase.js';
+
   let hover = false;
   let hoverCount = 0;
   const hoverPositions = [100, 50, 30, 0];
   let remi = [6198, 4153, 4981];
   let selectedRemi = remi[Math.floor(Math.random() * remi.length)];
 
+  const user = userStore(auth);
+    let isLoading = true;
+  
+    user.subscribe(($user) => {
+      isLoading = false; // Set loading to false when the user state updates
+    });
+  
+    async function signOut() {
+      isLoading = true; // Start loading
+      try {
+        await auth.signOut();
+        console.log('User signed out successfully.');
+      } catch (error) {
+        console.error(error);
+      } finally {
+        isLoading = false; // End loading
+      }
+    }
+
 </script>
 
+<!-- nav -->
+<div class="fixed z-10 font-p22 text-white top-3 right-3 lg:right-[20rem] lg:space-x-[4rem] flex 
+flex-row space-x-[1.5rem]">
+  <a href="/" class="glow">Home</a>
+  <a href="/todo" class="glow">Todo</a>
+  <a href="/shop" class="glow">Shop</a>
+</div>
+<!-- nav -->
 
-
+<!-- admin reveal -->
 <div 
   class="z-50 min-w-full fixed bottom-0 -left-28 transition-transform duration-300"
   style={`transform: translateY(${hover ? hoverPositions[hoverCount] : 100}%)`}
@@ -30,10 +63,14 @@
     />
   {/if}
 </div>
-<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 px-6 py-2 sunset-bg opacity-0 hover:opacity-100
-  transform transition-all duration-1000 ease-in-out text-white text-xs text-opacity-0 font-input
-  hover:text-opacity-100">
-<h3 class="">
+<!-- admin reveal -->
+
+<!-- made by swimming, oink oink -->
+<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[15rem] h-[3rem] bg-black bg-opacity-30 hover:opacity-100
+  transform transition-all duration-1000 ease-in-out
+   text-white text-[0.823rem] font-input
+  ">
+<h3 class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
     by 
     <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
       <span 
@@ -52,54 +89,22 @@
     </a>
   </h3>
 </div>
+<!-- made by swimming, oink oink -->
 
+<!-- Profile / Login -->
+<div>
+  {#if isLoading}
+    <p>🌎</p>
+    <p>🌍</p>
+    <p>🌏</p>
+  {:else if $user}
+    <Profile {signOut} />
+  {:else}
+    <Login />
+  {/if}
+</div>
+<!-- Profile / Login -->
 
-<!-- links -->
-<!-- <container class="flex fixed bottom-0 space-x-1">
-  
-  <a href="https://github.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
-    
-
-<div class="git bg-white w-10 h-5"
-  on:mouseover={() => {
-    socialHover = 'github'
-    if (hoverCount < hoverPositions.length - 1) hoverCount++;
-  }}
-
-  on:mouseout={() => socialHover = socialHover}
-  on:focus={() => socialHover = 'github'}
-  on:blur={() => socialHover = 'socialHover'}
-  ></div></a>
-  
-  <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">
-    <div class="twit bg-sky-300 w-5 h-5"
-  on:mouseover={() => {
-    socialHover = 'twitter'
-    if (hoverCount < hoverPositions.length - 1) hoverCount++;
-  }}
-
-  on:mouseout={() => socialHover = socialHover}
-  on:focus={() => socialHover = 'twitter'}
-  on:blur={() => socialHover = socialHover}
-  ></div></a>
-
-  
-
-  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-    
-<div class="yt bg-red-300 w-10 h-5"
-  on:mouseover={() => {
-    socialHover = 'youtube'
-    if (hoverCount < hoverPositions.length - 1) hoverCount++;
-  }}
-
-  on:mouseout={() => socialHover = socialHover}
-  on:focus={() => socialHover = 'youtube'}
-  on:blur={() => socialHover = socialHover}
-  ></div></a>
-<div class="flex-1 text-right text-5xl font-extrabold font-input tracking-tighter hover:text-sky-300">{socialHover}</div> 
-</container> -->
-<!-- end links -->
 
 
 <slot />

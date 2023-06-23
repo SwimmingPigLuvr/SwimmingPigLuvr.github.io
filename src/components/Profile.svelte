@@ -92,22 +92,39 @@
 <!-- profile button -->
 <div 
     
-    class="z-20 fixed top-[1rem] left-3 md:left-6 lg:left-2 lg:top-20 flex align-top"
+    class="z-0 fixed top-0 left-2 lg:left-[20rem]
+    "
     >
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
     <button
         use:autoAnimate
+        on:mouseenter={() => pfpHover = true}
+        on:mouseleave={() => pfpHover = false}
         on:click={() => showProfile.set(!$showProfile)}
-        class=" ">
+        class="">
         <img 
-            src={userPfp.src} 
-            alt={userPfp.alt} 
-            class="h-[4rem] w-auto 
-             transition-all ease-in-out duration-1000"
+            src={userPfp.src} alt={userPfp.alt}
+            class="h-[4rem] w-[8rem] 
+             rounded-full 
+            border-y-[1rem] border-transparent hover:border-b-0 hover:border-[0.425rem]
+            hover:rounded-none hover:border-white
+             transform transition-all 
+            duration-[0.43s] ease-in-out"
         >
     </button>
+
+    {#if pfpHover}
+    <div 
+        in:fly={{ y:-10, duration: 1000, delay: 200, easing: cubicInOut }}
+        out:slide
+        class="absolute text-center -bottom-2 right-1/2 translate-x-1/2 w-[8rem] border-t-0 border-[0.425rem]
+        border-white
+        text-[0.75rem] tracking-tighter bg-black bg-opacity-100  font-input text-white">
+       <p>profile</p> 
+    </div>
+    {/if}
    
     
     

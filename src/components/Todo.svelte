@@ -54,7 +54,6 @@
 
 
   
-  export default TodoList;
 
 
   // Create a writable store to hold the list of todo items
@@ -163,7 +162,7 @@
   function countCompleted() {
     tasksCompleted.update((n) => n + 1);
     console.log("task completed!");
-    console.log($tasksCompleted + "total tasks completed");
+    console.log($tasksCompleted + " total tasks completed");
   }
 
   // function to complete a todo item
@@ -205,7 +204,7 @@
 
 </script>
 
-<body class="bg-lime-400">
+<body class="notes-bg">
   
 
   <!-- container wrapper -->
@@ -225,7 +224,7 @@
     on:focus={() => (listHover = true)}
     on:blur={() => (listHover = false)}
     class="category absolute font-input font-bold tracking-tighter text-xl w-[16rem] 
-      h-[2.5rem] left-1/2 -translate-x-1/2 border-white hover:border-4 hover:border-b-0 border-2 border-b-0
+      h-[2.5rem] left-2/3 -translate-x-3/4 border-white hover:border-4 hover:border-b-0 border-2 border-b-0
       -top-[2.5rem] text-white flex flex-row items-center justify-center
       hover:cursor-pointer bg-black space-x-3 transform transition-all duration-3000 ease-in-out">
       {#if currentList === 'Favorites'}
@@ -332,7 +331,7 @@
    <!-- list of lists -->
 
   <!-- add task -->
-    <div class="add-task-button absolute right-3 -bottom-[33px] md:right-6 lg:top-0 lg:right-28">
+    <div class="add-task-button absolute right-3 md:right-6 -bottom-[33px]  ">
       <form on:submit={addTodoItem} class="w-full m-auto">
         <button
           type="submit"
@@ -340,10 +339,10 @@
           on:mouseleave={() => (addHover = false)}
           on:focus={() => (addHover = true)}
           on:blur={() => (addHover = false)}
-          class="w-[144px] h-[33px] lg:h-[4vw] lg:w-[4vw] bg-white
-          font-input font-bold text-black text-[0.88rem] lg:text-[1vw] leading-tight 
+          class="w-[144px] h-[33px]  bg-white
+          font-input font-bold text-black text-[0.88rem] leading-tight 
           tracking-tighter border-sunset
-          hover:border-[0.33rem] lg:hover:border-[0.5vw] shadow-inner shadow-black
+          hover:border-[0.33rem] shadow-inner shadow-black
           transform transition-all ease-in-out duration-1000 flex items-center justify-center"
         >
             <span transition:fade class="text-left">ADD TASK</span>
@@ -358,26 +357,37 @@
     </div>
     <!-- main container -->
     <div
-      class="max-h-[85vh] mx-3 my-20 lg:my-6 md:mx-6 lg:mx-48 flex flex-col p-2 md:p-8 bg-white border-[3vw] md:border-[2vw] lg:border-[1vw] yayo-border-blue overflow-y-auto"
+      class="relative max-h-[85vh] mx-3 my-[6rem] md:mx-6 flex flex-col p-2 md:p-8 bg-white border-[3vw] 
+      md:border-[2vw] lg:border-[1vw] yayo-border-blue overflow-y-auto
+      transform transition-all duration-1000 ease-in-out"
     >
       <!-- messages -->
-      <div class="messages text-6xl md:text-6xl lg:text-8xl">
+      <div 
+        
+        class="messages text-6xl md:text-6xl lg:text-8xl">
         {#if $showWarning}
-          <p class="font-input tracking-tighter font-bold text-lime-300">
+          <p 
+            in:fly={{ y: 20, duration: 1000, easing: cubicInOut}}
+            class="font-input tracking-tighter font-bold text-lime-300">
             PLEASE FILL OUT FIRST TASK BEFORE CREATING NEW ONE
           </p>
         {/if}
         {#if $showCannotComplete}
-          <p class="font-input tracking-tighter font-bold text-rose-300">
+          <p 
+          in:fly={{ y: 20, duration: 1000, easing: cubicInOut}} 
+          class="font-input tracking-tighter font-bold text-rose-300">
             TASK MUST BE TITLED BEFORE COMPLETING
           </p>
         {/if}
         {#if $todoList.length < 1 && $completedList.length > 0}
-          <p class="font-input tracking-tighter font-bold text-sky-300">
+          <p 
+            in:fly={{ y: 20, duration: 1000, easing: cubicInOut}}
+            class="font-input tracking-tighter font-bold text-sky-300">
             ALL TASKS COMPLETE. GOOD JOB
           </p>
         {:else if $todoList.length < 1 && $completedList.length < 1}
           <p
+          in:fly={{ y: -20, duration: 1000, easing: cubicInOut}}
             class="font-input tracking-tighter font-bold text-black"
           >
             NO {currentList?.toUpperCase()}
@@ -396,16 +406,23 @@
             >
               {#each $todoList as todo, index (todo.id)}
                 <li
-                  on:mouseenter={() => (todoHover[index] = true)}
-                  on:mouseleave={() => (todoHover[index] = false)}
+                  on:mouseenter={() => {
+                    console.log("mouse enter index: ", index, "todo ID: ", todo.id);
+                    todoHover[index] = true;
+                  }}
+                  on:mouseleave={() => {
+                    console.log("mouse leave index: ", index, "todo ID: ", todo.id);
+                    todoHover[index] = false;
+                  }}
                   on:focus={() => (todoHover[index] = true)}
                   on:blur={() => (todoHover[index] = false)}
-                  class="w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500"
+                  class="relative w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500"
                 >
                 <!-- task buttons: favorite, complete, delete, more? -->
                   {#if todoHover[index]}
                     <div
-                      class="todo-buttons absolute top-4 right-8 items-center space-x-3 text-3xl flex justify-end"
+                      transition:fade
+                      class="todo-buttons absolute top-3 right-6 items-center space-x-3 text-3xl flex justify-end"
                     >
                     <!-- favorite button -->
                       <button>

@@ -27,14 +27,6 @@
   </script>
   
   <body>
-    {#if isLoading}
-      <p>Loading...</p> <!-- Or a loading spinner -->
-    {:else if $user}
-      <Profile {signOut} /> <!-- Ensure Profile can accept and handle signOut prop -->
       <Todo />
-    {:else}
-      <Login />
-      <Todo />
-    {/if}
   </body>
   

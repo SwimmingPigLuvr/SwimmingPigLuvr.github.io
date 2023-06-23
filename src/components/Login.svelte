@@ -10,8 +10,9 @@
     import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
-    import { fade } from 'svelte/transition';
+    import { fade, fly, slide } from 'svelte/transition';
     import { addDoc, collection } from 'firebase/firestore';
+  import { cubicInOut, cubicOut } from 'svelte/easing';
 
     const user = userStore(auth);
     let authInstance;
@@ -164,15 +165,16 @@
 <body>
 
      <!-- login button -->
-    <div class="transform transition-all duration-200 ease-in-out fixed hover:bg-white hover:border-transparent border-black border-4 bg-opacity-0 text-[2vw] md:text-[1vw] top-3 left-3 font-input">
-        <button 
-            on:click={() => showLoginForm.set(!$showLoginForm)}
-            class=" px-6 py-2 items-center flex flex-row md:flex-col space-x-2 justify-end">
-                <p>login</p>
-<!--👈-->   <p class="block md:hidden ">👈</p>
-<!--👆-->   <p class="hidden md:block animate-bounce">👆</p>
+    <div 
+        class="px-5 py-2 bg-white
+          text-bold font-input
+         transform transition-all 
+        duration-[2s] ease-in-out top-3 left-3  fixed">
+        <button on:click={() => showLoginForm.set(!$showLoginForm)}>
+            LOGIN
         </button>
     </div>
+    
 
         <!-- create db -->
         <!-- <button 
@@ -186,24 +188,29 @@
     {#if $showLoginForm}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
-            on:click={closeLogin} transition:fade={{delay: 0, duration: 300}} 
-            class="z-10 login-overlay fixed font-input tracking-tighter text-black inset-0 bg-rose-400 bg-opacity-100 flex flex-col items-center justify-center">
+            on:click={closeLogin} transition:slide={{  duration: 1000, easing: cubicInOut}} 
+            class="z-10 login-overlay inset-0 hover:cursor-w-resize
+            fixed font-input tracking-tighter text-black shelby-bg 
+            bg-opacity-100 flex flex-col">
 
             <!-- login modal -->
-            <div class="inset-0 p-16 forbidden-bg">
+            <div 
+                
+                class="inset-0 px-[4rem] pt-[2rem] ">
                 <!-- login/register -->
                 <div>
-                    <div class="text-white text-2xl px-3 py-4">
-                    {#if mode === "login"}
-                    <h2>LOGIN</h2>
-                    {:else}
-                    <h2>REGISTER</h2>
-                    {/if}
+                    <div 
+                    in:fly={{ delay: 300, y: -23, duration: 1000, easing: cubicInOut}}
+                    class="text-white text-2xl px-3 py-4">
+                    <h2>{mode}</h2>
+                    
                     </div>
 
 
                     <!-- form -->
-                    <form on:submit|preventDefault={handleLogin} class="text-white py-2 px-3">
+                    <form on:submit|preventDefault={handleLogin} 
+                        in:fly={{ delay: 1000, y: -23, duration: 1000, easing: cubicInOut}}
+                        class="text-white py-2 px-3">
                         <div class="mb-4 text-white" >
                             <label for="email">email</label>
                             <input 
@@ -238,23 +245,29 @@
                                 type="password" required>
                         </div>
                         {/if}
-                
-                        <button 
-                            on:click={handleSubmit}
-                            type="submit" 
-                            class="border-transparent hover:border-white hover:bg-sky-500 transform transition-colors duration-200 ease-in-out border-2 right mt-4 px-4 py-2 bg-black text-white rounded-md">
-                                {#if $user}
-                                    Login Successful
+                        <div class="flex flex-row justify-start space-x-[4rem] items-baseline align-bottom">
+                            <button 
+                                on:click={handleSubmit}
+                                type="submit" 
+                                class="border-transparent hover:border-white hover:bg-sky-500 transform 
+                                transition-colors duration-500 ease-in-out border-2 mt-4 px-4 py-2 bg-black 
+                                text-white rounded-md">
+                                    {#if $user}
+                                        Login Successful
+                                    {:else}
+                                        {mode}
+                                    {/if}
+                            </button>
+                            <div 
+                                transition:fly={{ y: -10, delay: 2000, duration: 1000, easing: cubicInOut}}
+                                class="text-sm text-slate-300">
+                                {#if mode === "login"}
+                                    <p>No Account? <span class="glow text-white cursor-pointer" on:click={() => switchMode()}>SIGN UP</span></p>
                                 {:else}
-                                    {mode}
+                                    <p>Have an Account? <span class="glow text-white cursor-pointer" on:click={() => switchMode()}>LOGIN</span></p>
                                 {/if}
-                        </button>
-
-                        {#if mode === "login"}
-                            <p class="px-2 py-8 text-sm text-slate-300">No Account? <span class="glow text-white cursor-pointer" on:click={() => switchMode()}>SIGN UP</span></p>
-                        {:else}
-                            <p class="px-2 py-8 text-sm text-slate-300">Have an Account? <span class="glow text-white cursor-pointer" on:click={() => switchMode()}>LOGIN</span></p>
-                        {/if}
+                            </div>
+                        </div>
                         
                         {#if errorMessage}
                         <div class="px-2 bg-black max-w-full">
