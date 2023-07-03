@@ -20,7 +20,14 @@ export default {
       },
       minWidth: {
         'min-w-remilio': '2000px',
+      },
+      resize: {
+        'none': 'none',
+        'y': 'vertical',
+        'x': 'horizontal',
+        'both': 'both',
       }
+
     },
   },
   plugins: [],

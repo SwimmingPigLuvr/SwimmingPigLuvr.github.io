@@ -15,11 +15,13 @@
   import "../app.css";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import autoAnimate from "@formkit/auto-animate";
-  import { cubicInOut } from "svelte/easing";
+  import autoAnimate, { getTransitionSizes } from "@formkit/auto-animate";
+  import { backIn, backInOut, backOut, cubicInOut, cubicOut } from "svelte/easing";
   import { fade, fly, slide } from "svelte/transition";
   import { afterUpdate } from "svelte";
   import { flip } from "svelte/animate";
+  import { add_classes } from "svelte/internal";
+
 
   let lists = ['Favorites', 'Main Tasks', 'Side Quests'];
   let currentList = 'Main Tasks';
@@ -154,6 +156,8 @@
   let isHoveringButton: boolean[] = [];
   // delete item hover
   let isHoveringDelete: boolean[] = [];
+  // favoritex item hover
+  let isHoveringFavorite: boolean[] = [];
   // delete completed item hover
   let isHoveringDeleteCompleted: boolean[] = [];
 
@@ -204,7 +208,7 @@
 
 </script>
 
-<body class="notes-bg">
+<body class="">
   
 
   <!-- container wrapper -->
@@ -331,81 +335,99 @@
    <!-- list of lists -->
 
   <!-- add task -->
-    <div class="add-task-button absolute right-3 md:right-6 -bottom-[33px]  ">
+    <div 
+   
+    class="add-task-button absolute right-3 md:right-6 -bottom-[5rem]  ">
+      
       <form on:submit={addTodoItem} class="w-full m-auto">
         <button
           type="submit"
-          on:mouseenter={() => (addHover = true)}
-          on:mouseleave={() => (addHover = false)}
-          on:focus={() => (addHover = true)}
-          on:blur={() => (addHover = false)}
-          class="w-[144px] h-[33px]  bg-white
-          font-input font-bold text-black text-[0.88rem] leading-tight 
-          tracking-tighter border-sunset
-          hover:border-[0.33rem] shadow-inner shadow-black
+          class="px-8 h-[5rem] 
+          font-input text-[1rem]
+          -tracking-widest sunset-bg border-opacity-50 border-t-white border-r-slate-400 border-l-slate-400 border-b-slate-700
+          border-[0.88rem] shadow-inner shadow-black text-white hover:border-[]
           transform transition-all ease-in-out duration-1000 flex items-center justify-center"
         >
-            <span transition:fade class="text-left">ADD TASK</span>
-          {#if addHover === true}
-          <div class="text-[1.11rem] flex flex-row flex-wrap justify-between fixed w-full px-2 top-0">
-            <span transition:fade class=" ">🌸</span>
-            <span transition:fade class=" ">🌸</span>
-          </div>
-          {/if}
+            <p>add task</p>
+          
         </button>
       </form>
     </div>
     <!-- main container -->
     <div
-      class="relative max-h-[85vh] mx-3 my-[6rem] md:mx-6 flex flex-col p-2 md:p-8 bg-white border-[3vw] 
-      md:border-[2vw] lg:border-[1vw] yayo-border-blue overflow-y-auto
-      transform transition-all duration-1000 ease-in-out"
+      transition:slide={{duration: 1000, easing: backInOut}}
+      class="relative max-h-[80vh] mx-3 my-[6rem] md:mx-6 flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 yayo-border-blue overflow-y-auto
+      resize overflow-auto"
     >
       <!-- messages -->
-      <div 
-        
-        class="messages text-6xl md:text-6xl lg:text-8xl">
-        {#if $showWarning}
-          <p 
-            in:fly={{ y: 20, duration: 1000, easing: cubicInOut}}
-            class="font-input tracking-tighter font-bold text-lime-300">
-            PLEASE FILL OUT FIRST TASK BEFORE CREATING NEW ONE
-          </p>
-        {/if}
-        {#if $showCannotComplete}
-          <p 
-          in:fly={{ y: 20, duration: 1000, easing: cubicInOut}} 
-          class="font-input tracking-tighter font-bold text-rose-300">
-            TASK MUST BE TITLED BEFORE COMPLETING
-          </p>
-        {/if}
-        {#if $todoList.length < 1 && $completedList.length > 0}
-          <p 
-            in:fly={{ y: 20, duration: 1000, easing: cubicInOut}}
-            class="font-input tracking-tighter font-bold text-sky-300">
-            ALL TASKS COMPLETE. GOOD JOB
-          </p>
-        {:else if $todoList.length < 1 && $completedList.length < 1}
-          <p
-          in:fly={{ y: -20, duration: 1000, easing: cubicInOut}}
-            class="font-input tracking-tighter font-bold text-black"
-          >
-            NO {currentList?.toUpperCase()}
-          </p>
-        {/if}
-      </div>
 
+      <!-- 🚧 rewrite this whole Selection. 
+        they should all have the same classes, except for the font color,
+      just one div with the same transitions, -->
+      
+      <div 
+          class="messages text-6xl md:text-6xl lg:text-8xl">
+          {#if $showWarning}
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <p 
+                in:slide={{ duration: 1000, easing: backOut}}
+                out:slide={{ duration: 700, easing: backIn}}
+                  on:click={() => showWarning.set(false) }
+                  class="font-input hover:cursor-pointer transform transition-all duration-300 ease-in-out hover:text-lime-600 tracking-tighter font-bold text-lime-300">
+                  PLEASE FILL OUT MOST RECENT TASK BEFORE CREATING NEW ONE 
+              </p>
+          {/if}
+          {#if $showCannotComplete}
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <p 
+                in:slide={{ duration: 1000, easing: backOut}}
+                out:slide={{ duration: 700, easing: backIn}}
+                  on:click={() => showCannotComplete.set(false) }
+                  class="font-input hover:cursor-pointer transform transition-all duration-300 ease-in-out hover:text-rose-600 tracking-tighter font-bold text-rose-300">
+                  TASK MUST BE TITLED BEFORE COMPLETING
+              </p>
+          {/if}
+          {#if $todoList.length < 1 && $completedList.length > 0}
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <p 
+                in:slide={{ duration: 1000, easing: backOut}}
+                out:slide={{ duration: 700, easing: backIn}}
+                  class="font-input hover:cursor-pointer transform transition-all duration-300 ease-in-out hover:text-sky-600 tracking-tighter font-bold text-sky-300">
+                  ALL TASKS COMPLETE. GOOD JOB
+              </p>
+          {:else if $todoList.length < 1 && $completedList.length < 1}
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <p 
+                in:slide={{ duration: 1000, easing: backOut}}
+                out:slide={{ duration: 700, easing: backIn}}
+                  class="font-input tracking-tighter font-bold text-black">
+                  NO {currentList?.toUpperCase()}
+              </p>
+          {/if}
+    </div>
+  <!-- messages -->
+  
+
+      <!-- messages -->
+
+              <!-- use:autoAnimate={{ duration: 1000 }} -->
       <!-- tasks container -->
       <div class="">
         <!-- tasks list -->
-        <div class="">
+        <div class="list">
           {#if $todoList.length > 0}
             <ul
-              use:autoAnimate={{ duration: 300 }}
-              class="flex justify-between flex-wrap overflow-y-auto m-2"
+              in:slide={{ duration: 1000, easing: backInOut}}
+              out:slide={{ duration: 1000, easing: backInOut}}
+
+
+              class="flex justify-start flex-wrap overflow-y-auto py-[1rem] transition-all transform duration-1000 ease-in-out"
             >
               {#each $todoList as todo, index (todo.id)}
                 <li
+                  in:fly={{ y: -100, duration: 500, easing: backOut }}
+                  out:fly={{ y: 100, duration: 500, easing: backIn }}
+                  animate:flip={{ duration: 1000, easing: backInOut }}
                   on:mouseenter={() => {
                     console.log("mouse enter index: ", index, "todo ID: ", todo.id);
                     todoHover[index] = true;
@@ -416,22 +438,34 @@
                   }}
                   on:focus={() => (todoHover[index] = true)}
                   on:blur={() => (todoHover[index] = false)}
-                  class="relative w-full md:w-1/2 items-start border-b-white border-r-white border-[2vw] bg-sky-500"
-                >
+                  class="relative w-full  md:w-1/2 lg:w-1/3 items-start border-t-white border-r-white border-[2rem] 
+                  bg-sky-800"
+                  >
                 <!-- task buttons: favorite, complete, delete, more? -->
                   {#if todoHover[index]}
                     <div
-                      transition:fade
+                      in:slide={{duration: 500, easing: backOut}}
+                      out:slide={{duration: 500, easing: backIn}}
                       class="todo-buttons absolute top-3 right-6 items-center space-x-3 text-3xl flex justify-end"
                     >
                     <!-- favorite button -->
                       <button>
                         <img 
+                        on:mouseenter={() => isHoveringFavorite[index] = true}
+                        on:mouseleave={() => isHoveringFavorite[index] = false}
+                        on:focus={() => isHoveringFavorite[index] = true}
+                        on:blur={() => isHoveringFavorite[index] = false}
                         src="/pfps/remilia-1.png" 
                         alt="remilia corporation logo" 
-                        class="w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0
+                        class="relative w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0
                         transform transition-all duration-300 ease-in">
                       </button>
+                      {#if isHoveringFavorite[index]}
+                        <div 
+                        in:slide={{duration: 500, easing: backInOut}}
+                        out:slide={{duration: 1000, easing: backInOut}}
+                        class="font-input text-[1rem] text-center -tracking-widest absolute bottom-[3rem] -right-[1.5rem] px-2 w-[10rem] bg-yellow-300 border-black border-2">Add to Favorites</div>
+                      {/if}
                     <!-- complete button -->
                       <button
                         on:mouseover={() => (isHoveringButton[index] = true)}
@@ -450,6 +484,13 @@
                           🔘
                         {/if}
                       </button>
+                      {#if isHoveringButton[index]}
+                        <div 
+                        in:slide={{duration: 500, easing: backInOut}}
+                        out:slide={{duration: 1000, easing: backInOut}}
+                        class="font-input text-[1rem] text-center -tracking-widest absolute w-[10rem] bottom-[3rem] -right-[1.5rem] px-2 bg-green-500 border-black border-2">Complete Task</div>
+                      {/if}
+                      
                       
                       <!-- delete button -->
                       <button
@@ -467,6 +508,12 @@
                           <span>🚮</span>
                         {/if}
                       </button>
+                      {#if isHoveringDelete[index]}
+                        <div 
+                        in:slide={{duration: 500, easing: backInOut}}
+                        out:slide={{duration: 1000, easing: backInOut}}
+                        class="font-input text-[1rem] text-center -tracking-widest absolute bottom-[3rem] w-[10rem] -right-[1.5rem] px-2 bg-red-500 border-black border-2">Delete Task</div>
+                      {/if}
                     </div>
                   {/if}
                   <!-- svelte-ignore a11y-mouse-events-have-key-events -->
@@ -481,7 +528,7 @@
                       bind:this={titleInput}
                       value={todo.title}
                       on:input={(event) => editTodoItem(index, "title", event)}
-                      class="text-[2vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
+                      class="text-[1.43rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
                     />
                     <!-- details -->
                     <label for="todoDetails-{index}" class="pt-2">Details</label>
@@ -490,7 +537,7 @@
                       bind:value={todo.details}
                       on:input={(event) =>
                         editTodoItem(index, "details", event)}
-                      class="placeholder:text-white text-[1.5vw] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"
+                      class="placeholder:text-white text-[0.888rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"
                     />
                     <!-- date -->
                     <label for="todoDate-{index}" class="pt-2">Date</label>
@@ -499,7 +546,7 @@
                       id="todoDate-{index}"
                       value={todo.date}
                       on:input={(event) => editTodoItem(index, "date", event)}
-                      class="text-[2vw] lg:text-[1vw] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200"
+                      class="text-[1rem] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200"
                     />
                   </div>
                 </li>
@@ -518,14 +565,17 @@
             {/if}
             <ul class=" space-y-2">
               {#each $completedList as item, index (item.id)}
+             
                 <li
-                  class="flex flex-row2 bg-emerald-800 hover:bg-lime-500 bg-opacity-50 shadow-md rounded-md"
-                >
-                  <p
-                    class="font-p22 line-through text-blue-100 w-full px-4 py-2 rounded-md"
-                  >
+                  class="flex flex-row border-[1rem] text-lime-400 border-l-slate-400 border-b-slate-800 border-r-slate-400 justify-between bg-slate-600 shadow-md rounded-md"
+                > 
+                <div class="item-info  font-input-compressed -tracking-widest font-bold  w-full px-8 py-2 rounded-md">
+                  <p class="title text-[3rem]">
                     {item.title}
                   </p>
+                  <p class="details line-through text-[1rem]">{item.details}</p>
+                  
+                  </div>
                   <button
                     on:mouseover={() =>
                       (isHoveringDeleteCompleted[index] = true)}
@@ -535,7 +585,7 @@
                     on:blur={() => (isHoveringDeleteCompleted[index] = false)}
                     tabindex="0"
                     on:click={() => removeCompletedItem(index)}
-                    class="mr-2 text-[3vw]"
+                    class="mr-8 text-[3vw]"
                   >
                     {#if isHoveringDeleteCompleted[index]}
                       <span>🚮</span>

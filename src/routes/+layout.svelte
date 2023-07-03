@@ -44,7 +44,9 @@
 flex-row space-x-[1.5rem]">
   <a href="/" class="glow">Home</a>
   <a href="/todo" class="glow">Todo</a>
-  <a href="/shop" class="glow">Shop</a>
+  <a href="/chatGPT" class="glow">ChatGPT</a>
+  <a href="/shop" data-sveltekit-prefetch class="glow">Shop</a>
+  <a href="/playground" class="glow">playground</a>
 </div>
 <!-- nav -->
 
@@ -66,9 +68,9 @@ flex-row space-x-[1.5rem]">
 <!-- admin reveal -->
 
 <!-- made by swimming, oink oink -->
-<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[15rem] h-[3rem] bg-black bg-opacity-30 hover:opacity-100
-  transform transition-all duration-1000 ease-in-out
-   text-white text-[0.823rem] font-input
+<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[18rem] h-[3rem] bg-sky-400 bg-opacity-50 hover:opacity-100
+  transform transition-all duration-1000 ease-in-out border-black border-[0.1rem]
+   text-white text-[0.823rem] font-input tracking-tighter 
   ">
 <h3 class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
     by 
@@ -82,7 +84,7 @@ flex-row space-x-[1.5rem]">
         on:mouseout={() => hover = false}
         on:focus={() => hover = true}
         on:blur={() => hover = false}
-        class="hover:text-lime-200"
+        class="hover:text-black"
       >
         swimming🐷💖
       </span>

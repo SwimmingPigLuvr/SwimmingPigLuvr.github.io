@@ -5,6 +5,9 @@
 
  <!-- choose username: 123 cheese. photo fades in on polaroid -->
 
+ <!-- jun 27 todo -->
+ <!-- add hover message to the buttons in the profile modal -->
+
 <script>
     import autoAnimate from '@formkit/auto-animate';
     import { auth } from '$lib/firebase.js';
@@ -14,17 +17,42 @@
     import { onMount } from 'svelte';
     import { cubicInOut } from 'svelte/easing';
     import { tasksCompleted } from '../stores/tasks.js';
+    import { gsap } from 'gsap';
+
+
+    // handle mouse move
+    let x = 0;
+    let y = 0;
+
+    const obj = { x: 0, y: 0 };
+
+    const handleMouseMove = (event) => {
+        gsap.to(obj, {
+            duration: 0.5, // animation duration in seconds
+            x: event.pageX,
+            y: event.pageY,
+            onUpdate: () => {
+                x = obj.x;
+                y = obj.y;
+            },
+            ease: "power1.out" // easing function for a more organic feel
+        });
+    };
+
+    let editNameMsg = false;
+
+
 
     // when hovering over the button nav in profile modal i want text to appear in a div neatly placed below
     let msgBack = false;
     let msgSettings = false;
+    let msgPfp = false;
     let msgSignout = false;
 
     let authInstance;
     const user = userStore(auth);
     let showProfile = writable(false);
     let name = 'anon';
-    let showNameForm = false;
     let showPfps = false;
     let pfpHover = false;
     let showSettings = false;
@@ -67,9 +95,7 @@
         name = input;
     }
 
-    function toggleNameForm() {
-        showNameForm = !showNameForm;
-    }
+    
 
     function toggleSettings() {
         showSettings = !showSettings;
@@ -77,6 +103,9 @@
 
     function toggleBack() {
         msgBack = !msgBack;
+    }
+    function togglePfpMsg() {
+        msgPfp = !msgPfp;
     }
     function toggleSettingsMsg() {
         msgSettings = !msgSettings;
@@ -88,13 +117,16 @@
     export let signOut;
 </script>
 
+<svelte:window on:mousemove={handleMouseMove} />
+
+
 
 <!-- profile button -->
 <div 
     
-    class="z-0 fixed top-0 left-2 lg:left-[20rem]
-    "
-    >
+    class="z-50 fixed top-2 left-4">
+
+    
     
     <!-- svelte-ignore a11y-mouse-events-have-key-events -->
     
@@ -106,23 +138,32 @@
         class="">
         <img 
             src={userPfp.src} alt={userPfp.alt}
-            class="h-[4rem] w-[8rem] 
-             rounded-full 
-            border-y-[1rem] border-transparent hover:border-b-0 hover:border-[0.425rem]
-            hover:rounded-none hover:border-white
+            class="h-[6rem] w-[auto]
+             rounded-[100%] border-transparent
+            border-[0.3rem] hover:border-white
+            
              transform transition-all 
-            duration-[0.43s] ease-in-out"
+            duration-[1s] ease-in-out"
         >
-    </button>
-
+    </button> 
+    
     {#if pfpHover}
-    <div 
-        in:fly={{ y:-10, duration: 1000, delay: 200, easing: cubicInOut }}
-        out:slide
-        class="absolute text-center -bottom-2 right-1/2 translate-x-1/2 w-[8rem] border-t-0 border-[0.425rem]
-        border-white
-        text-[0.75rem] tracking-tighter bg-black bg-opacity-100  font-input text-white">
-       <p>profile</p> 
+        <div profile 
+            in:fade={{ duration: 500, easing: cubicInOut }}
+            out:slide={{ x: 100 }}
+
+            class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
+            bg-sky-400 bg-opacity-90 font-input text-white
+            border-black border-[0.1rem]"
+            style="top: {y-10}px; left: {x+30}px;"
+        >
+        {#if $showProfile}
+        <p 
+        class="">return ⮐</p> 
+
+        {:else}
+        <p>{name}</p> 
+        {/if}
     </div>
     {/if}
    
@@ -138,31 +179,34 @@
     class="z-20 profile-overlay bg-sky-300 fixed font-input tracking-tighter text-black inset-0 flex flex-col items-center justify-center">
     
     <!-- profile modal -->
-    <div class="z-30 fixed inset-0 lg:inset-x-[20vw] md:inset-[5vw] p-5 md:p-10 bg-black">
+    <div class="z-30 fixed inset-0 p-5 md:p-10 bg-black">
 
         
 
         <div class="">
             <!-- header -->
             <div class="flex flex-col space-y-6">
-                <div class="image-container w-[10rem] h-[10rem] yayo-border-blue border-[1rem]" 
-                    on:mouseenter={() => pfpHover=true} 
-                    on:mouseleave={() => pfpHover=false}>
-                    {#if pfpHover}
-                    <img 
-                        transition:fade
-                        src='images/BlanK.png' 
-                        alt={userPfp.alt}
-                        class="absolute z-20 w-[8rem] h-[8rem]">
-                    {/if}
-                    <img 
-                        transition:slide
-                        src={userPfp.src} 
-                        alt={userPfp.alt}
-                        class="absolute w-[8rem] h-[8rem]">
+                <input use:autoAnimate 
+                       type="text" 
+                       id="nameForm" 
+                       bind:value={name} 
+                       placeholder="choose name" 
+                       on:mouseenter={() => editNameMsg = true}
+                       on:mouseleave={() => editNameMsg = false}
+                       on:blur={() => setName(name)} 
+                       class="relative z-10 text-white bg-black focus:border-lime-400 border-transparent border-2 mx-10 text-center font-input tracking-tighter text-[2rem] md:text-[5rem]">
+            {#if editNameMsg}
+                <div 
+                    in:fade={{ duration: 500, easing: cubicInOut }}
+                    out:slide={{ x: 100 }}
+                    class="absolute px-8 z-50 py-2 text-center text-[0.88rem] tracking-tighter bg-sky-400 bg-opacity-90 font-input text-white border-black 
+                    border-[0.1rem]"
+                    style="top: {y+50}px; left: {x+50}px;">
+                    <p class=""> edit name</p>
                 </div>
-                <h2 class="z-10 text-white font-input tracking-tighter text-[10vw]">{name}</h2>
-            </div>
+            {/if}
+        </div>
+            
         </div>
 
         <!-- stats -->
@@ -171,18 +215,13 @@
             <p class="">TASKS COMPLETED</p>
         </div> -->
         
-        {#if showSettings}
         <div class="settings">
-        <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={toggleNameForm}>change name</button>
-        <div class="name-form {showNameForm ? '' : 'hidden'}">
-            <input use:autoAnimate type="text" id="nameForm" bind:value={name} on:blur={() => setName(name)} class="">
-        </div>
+        
         <!-- this menu should only open after the user chooses to change their pfp -->
 
-        <button class="text-white font-input cursor-pointer tracking-tighter text-2xl" on:click={togglePfps}>choose pfp</button>
         <!-- pfp options -->
         <div class="pfp-selector {showPfps ? '' : 'hidden'}">
-            <div class="pfp-options flex flex-wrap overflow-y-auto max-h-[50vh]">
+            <div class="pfp-options flex flex-wrap overflow-y-auto max-h-[75vh] border-2 border-white">
                 {#each pfps as pfp, i}
                     <img 
                         src={pfp.src} 
@@ -195,25 +234,59 @@
         <!-- when selecting pfp it can show up really big -->
         
     </div>
-    {/if}
 
     <!-- nav buttons (denoted by emojis) -->
     <!-- back arrow for mobile -->
-    <div class="z-40 flex flex-row space-x-3 fixed top-3 right-3 text-stone-100 font-input font-bold tracking-tighter">
+    <div class="z-40 flex flex-col space-y-3 fixed top-3 right-3 text-stone-100 font-input font-bold tracking-tighter">
+
+        <!-- go back -->
         <button 
-            class="text-[4vw] hover:scale-150 transform transition-all duration-300 ease-in-out" 
+            class="text-[2rem] hover:scale-[175%] transform transition-all duration-300 ease-in-out" 
             on:click={closeProfile}
             on:mouseover={toggleBack}
             on:mouseleave={toggleBack}
             on:focus={toggleBack}
             on:blur={toggleBack}
+            transition:slide={{duration: 500, easing: cubicInOut}}>
+                <p class="profile-overlay">⬅️</p>
+                {#if msgBack}
+                    <div
+                        in:fade={{ duration: 500, easing: cubicInOut }}
+                        out:slide={{ x: 100 }}
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
+                        bg-rose-400 bg-opacity-90 font-input text-white
+                        border-white border-[0.1rem]"
+                        style="top: {y-30}px; right: {50}px;">
+                        <p class="">back ⮐</p> 
+                    </div>
+                {/if}
+        </button>
+  <!-- settings -->
+        <button 
+            class="text-[2rem] hover:scale-[175%] text-white transform transition-all duration-300 ease-in-out"
+            on:click={togglePfps} 
+            on:mouseover={togglePfpMsg}
+            on:mouseleave={togglePfpMsg}
+            on:focus={togglePfpMsg}
+            on:blur={togglePfpMsg}
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
-                <p class="profile-overlay">⬅️</p>
+                <p>🖼</p>
+                {#if msgPfp}
+                    <div
+                        in:fade={{ duration: 500, easing: cubicInOut }}
+                        out:slide={{ x: 100 }}
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
+                        bg-rose-400 bg-opacity-90 font-input text-white
+                        border-white border-[0.1rem]"
+                        style="top: {y-100}px; right: {50}px;">
+                        <p class="">change pfp</p> 
+                    </div>
+                {/if}
         </button>
-  
+        <!-- change pfp -->
         <button 
-            class="text-[4vw] hover:scale-150 text-white transform transition-all duration-300 ease-in-out"
+            class="text-[2rem] hover:scale-[175%] text-white transform transition-all duration-300 ease-in-out"
             on:click={toggleSettings} 
             on:mouseover={toggleSettingsMsg}
             on:mouseleave={toggleSettingsMsg}
@@ -222,8 +295,19 @@
             transition:slide={{duration: 500, easing: cubicInOut}}
         >
                 <p>⚙️️</p>
+                {#if msgSettings}
+                    <div
+                        in:fade={{ duration: 500, easing: cubicInOut }}
+                        out:slide={{ x: 100 }}
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
+                        bg-rose-400 bg-opacity-90 font-input text-white
+                        border-white border-[0.1rem]"
+                        style="top: {y-100}px; right: {50}px;">
+                        <p class="">settyingszz</p> 
+                    </div>
+                {/if}
         </button>
-
+<!-- signout -->
         <button 
             on:click={signOut} 
             on:mouseover={toggleSignout}
@@ -231,29 +315,21 @@
             on:focus={toggleSignout}
             on:blur={toggleSignout}
             transition:slide={{duration: 500, easing: cubicInOut}}
-            class="text-[4vw] hover:scale-150 text-white transform transition-all duration-300 ease-in-out">
+            class="text-[2rem] hover:scale-[175%] text-white transform transition-all duration-300 ease-in-out">
             <p>🌸</p>
-        </button> 
-
-        <!-- hover button nav text -->
-        <div 
-            class="z-50 text-white text-[5vw] absolute top-8 right-0 font-input tracking-tighter">
-            {#if msgBack}
-                <p 
-                transition:fade={{duration: 200}}
-                >back</p>
-            {/if}
-            {#if msgSettings}
-                <p
-                in:fade={{duration: 200}}
-                >settings</p>
-            {/if}
             {#if msgSignout}
-                <p
-                transition:fade={{duration: 200}}
-                >signout</p>
-            {/if}
-        </div>
+                    <div
+                        in:fade={{ duration: 500, easing: cubicInOut }}
+                        out:slide={{ x: 100 }}
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
+                        bg-rose-400 bg-opacity-90 font-input text-white
+                        border-white border-[0.1rem]"
+                        style="top: {y-160}px; right: {3}rem;">
+                        <p class="">signout</p> 
+                    </div>
+                {/if}
+        </button> 
+        
         </div>
     </div>
    
