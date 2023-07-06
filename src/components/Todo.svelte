@@ -13,14 +13,12 @@
 
 <script lang="ts">
   import "../app.css";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { writable } from "svelte/store";
-  import autoAnimate, { getTransitionSizes } from "@formkit/auto-animate";
   import { backIn, backInOut, backOut, cubicInOut, cubicOut } from "svelte/easing";
   import { fade, fly, slide } from "svelte/transition";
   import { afterUpdate } from "svelte";
   import { flip } from "svelte/animate";
-  import { add_classes } from "svelte/internal";
 
 
   let lists = ['Favorites', 'Main Tasks', 'Side Quests'];
@@ -87,8 +85,6 @@
   let group;
   let showSpeech = false;
 
-  // create var to autofocus on title
-  let titleInput;
 
   let lastTodoItemTitle = "";
 
@@ -101,33 +97,35 @@
     if (lastTodoItemTitle) {
     }
   });
+  
+  // create var to autofocus on title
+  let inputs = [];
 
-  // todo if todolist.length < 1 => showWarning = false
-  // Function to handle adding a new todo item
-  function addTodoItem(event: Event) {
-    console.log(lastTodoItemTitle);
-    // Check if there's at least one item and if the first item's title isn't empty
-    if ($todoList.length > 0 && lastTodoItemTitle === "") {
-      showWarning.set(true); // Show the warning message
-    } else {
-      todoList.update((todoList) => [
-        ...todoList,
-        {
-          id: todoList.length + 1,
-          title: "",
-          details: "",
-          date: null,
-          completed: false,
-        },
-      ]);
-      showWarning.set(false); // Hide the warning message
+  // reactive statement that runs after todoList is updated
+  
 
-      afterUpdate(() => {
-        titleInput.focus();
-        showWarning.set(false);
-      });
-    }
+function addTodoItem(event: Event) {
+  console.log(lastTodoItemTitle);
+  // Check if there's at least one item and if the first item's title isn't empty
+  if ($todoList.length > 0 && lastTodoItemTitle === "") {
+    showWarning.set(true); // Show the warning message
+  } else {
+    todoList.update((todoList) => [
+      ...todoList,
+      {
+        id: todoList.length + 1,
+        title: "",
+        details: "",
+        date: null,
+        completed: false,
+      },
+    ]);
+    tick().then(() => {
+    inputs[inputs.length - 1].focus();
+    showWarning.set(false); // Hide the warning message
+  });
   }
+}
 
   // Function to handle editing a todo item
   function editTodoItem(index: number, field: string, event: Event) {
@@ -227,10 +225,11 @@
     on:mouseleave={() => (listHover = false)}
     on:focus={() => (listHover = true)}
     on:blur={() => (listHover = false)}
-    class="category absolute font-input font-bold tracking-tighter text-xl w-[16rem] 
-      h-[2.5rem] left-2/3 -translate-x-3/4 border-white hover:border-4 hover:border-b-0 border-2 border-b-0
-      -top-[2.5rem] text-white flex flex-row items-center justify-center
-      hover:cursor-pointer bg-black space-x-3 transform transition-all duration-3000 ease-in-out">
+    class="category absolute font-input font-bold tracking-tighter text-xl px-[2rem] py-[0.3rem]
+       right-1/2 translate-x-1/2 border-b-0 border-[0.75rem] border-t-white border-x-slate-400
+       -top-[3rem] text-white flex flex-row items-center justify-center
+      hover:cursor-pointer bg-black space-x-3 transform transition-all duration-3000 ease-[backIn]
+      ">
       {#if currentList === 'Favorites'}
           <img 
           src="/pfps/remilia-1.png" 
@@ -245,24 +244,99 @@
           class="w-[1.5rem] h-[1.5rem]">
           {/if}
     {#if listHover}
-      <p 
-        transition:fade={{duration: 200, easing: cubicInOut}} 
-        class="fixed top-[0.8125rem] text-sm right-3"
-        >
-        ⬇️
-      </p>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div 
+  on:click={closeList} 
+  class="z-10 list-overlay fixed inset-0 bg-black 
+  bg-opacity-60 flex flex-col ">
+  
+<!-- lists modal -->
+  <div 
+    in:slide={{duration: 700, easing: backOut}} 
+    out:slide={{duration: 300, easing: backIn}} 
+    class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 
+    bg-black flex flex-col p-4 space-y-4 items-center font-input 
+    text-xl tracking-tighter text-white">
+    
+    <!-- lists -->
+    <ul class="space-y-2">
+      {#each lists as list (list)} 
+      <div class="flex flex-row item-center justify-center space-x-2">
+        {#if list != currentList}
+        {#if list === 'Favorites'}
+        <img 
+        src="/pfps/remilia-1.png" 
+        alt="remilia corporation logo" 
+        class="w-[1.5rem] h-[1.5rem]">
+        {/if}
+        <option on:click={() => {selectList(list); closeList} } class="list-overlay glow-white" value="">{list}</option>
+        {#if list === 'Favorites'}
+        <img 
+        src="/pfps/remilia-1.png" 
+        alt="remilia corporation logo" 
+        class="w-[1.5rem] h-[1.5rem]">
+        {/if}
+        {/if}
+      </div>
+      {/each}
+    </ul>
+    <!-- create list -->
+      <button on:click={() => showCreateList = !showCreateList} class="glow-white">Create New List</button>
+  </div>
+<!-- lists modal -->
+
+<!-- create new list modal -->
+{#if showCreateList}
+  <div
+    on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
+    class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90
+    flex flex-col"
+  >
+    <div
+      transition:slide={{duration: 1000, easing: cubicInOut}}
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 
+      border-white border-2 bg-black flex flex-col p-6 space-y-8
+       font-input text-xl tracking-tighter text-white w-[20rem]"
+    >
+      <form on:submit|preventDefault={addList} class="flex flex-col space-y-4">
+        <label for="List">Create New List</label>
+        <input 
+          type="text" name="List" id="List" placeholder="Very Important Tasks"
+          bind:value={newList}
+          class="text-[1rem] p-2 bg-white bg-opacity-20"
+          >
+          <div class="flex flex-row justify-end space-x-6
+            text-[0.81rem] pt-6">
+            <!-- cancel -->
+            <button on:click|preventDefault={closeCreateList} class="create-list-overlay">Cancel</button>
+            <!-- done -->
+            <button type="submit" class="text-lime-400">Done</button>
+          </div>
+          
+
+      </form>
+    </div>
+    
+  </div>
+{/if}
+<!-- create new list modal -->
+
+
+</div>
     {/if}
   </div>
   {#if showLists}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
-    on:click={closeList} transition:fade={{duration: 300, easing: cubicInOut}}
+    on:click={closeList} 
     class="z-10 list-overlay fixed inset-0 bg-black 
     bg-opacity-60 flex flex-col ">
     
   <!-- lists modal -->
-    <div transition:slide={{duration: 500}} 
-      class="absolute left-1/2 top-20 -translate-x-1/2 w-[16rem] border-white  border-2 
+    <div 
+      in:slide={{duration: 700, easing: backOut}} 
+      out:slide={{duration: 300, easing: backIn}} 
+      class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 
       bg-black flex flex-col p-4 space-y-4 items-center font-input 
       text-xl tracking-tighter text-white">
       
@@ -337,27 +411,34 @@
   <!-- add task -->
     <div 
    
-    class="add-task-button absolute right-3 md:right-6 -bottom-[5rem]  ">
+    class="add-task-button absolute right-3 md:right-[15%] -bottom-[30%]  ">
       
       <form on:submit={addTodoItem} class="w-full m-auto">
         <button
           type="submit"
-          class="px-8 h-[5rem] 
+          class="px-8 h-[3rem] 
           font-input text-[1rem]
-          -tracking-widest sunset-bg border-opacity-50 border-t-white border-r-slate-400 border-l-slate-400 border-b-slate-700
-          border-[0.88rem] shadow-inner shadow-black text-white hover:border-[]
-          transform transition-all ease-in-out duration-1000 flex items-center justify-center"
+          font-bold
+          -tracking-widest bg-black 
+           shadow-inner shadow-black text-white hover:text-sky-300 
+          transform transition-all ease-[backInOut] duration-500 flex items-center justify-center"
         >
-            <p>add task</p>
+            <p>ADD TASK</p>
           
         </button>
       </form>
     </div>
+
+
+
+
+
+
     <!-- main container -->
     <div
-      transition:slide={{duration: 1000, easing: backInOut}}
-      class="relative max-h-[80vh] mx-3 my-[6rem] md:mx-6 flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 yayo-border-blue overflow-y-auto
-      resize overflow-auto"
+      class="main-container relative max-h-[80vh] mx-3 md:mx-auto my-[6rem] md:max-w-[70%] flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 
+      yayo-border-blue overflow-y-auto z-0
+      "
     >
       <!-- messages -->
 
@@ -421,7 +502,7 @@
               out:slide={{ duration: 1000, easing: backInOut}}
 
 
-              class="flex justify-start flex-wrap overflow-y-auto py-[1rem] transition-all transform duration-1000 ease-in-out"
+              class="flex justify-start flex-wrap overflow-y-auto py-[0.6rem] transition-all transform duration-1000 ease-in-out"
             >
               {#each $todoList as todo, index (todo.id)}
                 <li
@@ -438,7 +519,7 @@
                   }}
                   on:focus={() => (todoHover[index] = true)}
                   on:blur={() => (todoHover[index] = false)}
-                  class="relative w-full  md:w-1/2 lg:w-1/3 items-start border-t-white border-r-white border-[2rem] 
+                  class="relative w-full filter grayscale hover:grayscale-0 transform transition-all duration-500 ease-[backIn]  md:w-1/2 lg:w-1/3 items-start border-t-white border-r-white border-[2rem] 
                   bg-sky-800"
                   >
                 <!-- task buttons: favorite, complete, delete, more? -->
@@ -525,7 +606,7 @@
                     <input
                       id="todoTitle-{index}"
                       type="text"
-                      bind:this={titleInput}
+                      bind:this={inputs[index]}
                       value={todo.title}
                       on:input={(event) => editTodoItem(index, "title", event)}
                       class="text-[1.43rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
@@ -567,7 +648,7 @@
               {#each $completedList as item, index (item.id)}
              
                 <li
-                  class="flex flex-row border-[1rem] text-lime-400 border-l-slate-400 border-b-slate-800 border-r-slate-400 justify-between bg-slate-600 shadow-md rounded-md"
+                  class="flex flex-row border-[1rem] text-lime-400 border-x-slate-400 border-b-slate-800 justify-between bg-slate-600 shadow-md rounded-md"
                 > 
                 <div class="item-info  font-input-compressed -tracking-widest font-bold  w-full px-8 py-2 rounded-md">
                   <p class="title text-[3rem]">

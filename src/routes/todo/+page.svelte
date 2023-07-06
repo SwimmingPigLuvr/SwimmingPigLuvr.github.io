@@ -5,9 +5,8 @@
     import { userStore } from "sveltefire";
     import { auth } from '$lib/firebase.js';
     import { onMount } from "svelte";
-    import { fly } from "svelte/transition";
-    import { cubicInOut } from "svelte/easing";
-    
+    import { fade, fly, slide } from "svelte/transition";
+    import { backIn, backInOut, backOut, cubicInOut } from "svelte/easing";
   
     const user = userStore(auth);
     let isLoading = true;
@@ -20,7 +19,7 @@
     onMount(() => {
       setTimeout(() => {
         showTodo = true;
-      }, 1000);
+      }, 100);
     });
   
     async function signOut() {
@@ -38,7 +37,7 @@
   
   <body class="bg-lime-400">
     {#if showTodo}
-      <div in:fly={{ y: -1000, duration: 3000, easing: cubicInOut}}>
+      <div in:fly={{ y: 100, duration: 1000, easing: backInOut}}>
         <Todo />
       </div>
     {/if}

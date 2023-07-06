@@ -68,9 +68,9 @@ flex-row space-x-[1.5rem]">
 <!-- admin reveal -->
 
 <!-- made by swimming, oink oink -->
-<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[18rem] h-[3rem] bg-sky-400 bg-opacity-50 hover:opacity-100
-  transform transition-all duration-1000 ease-in-out border-black border-[0.1rem]
-   text-white text-[0.823rem] font-input tracking-tighter 
+<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[18rem] h-[3rem] notes-bg filter grayscale hover:grayscale-0 bg-opacity-50 hover:opacity-100
+  transform transition-all duration-1000 ease-in-out border-white border-[0.1rem]
+   text-lime-500 text-[0.823rem] font-input tracking-tighter 
   ">
 <h3 class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
     by 
