@@ -138,12 +138,7 @@
         class="">
         <img 
             src={userPfp.src} alt={userPfp.alt}
-            class="h-[6rem] w-[auto]
-             rounded-[100%] border-transparent
-            border-[0.3rem] hover:border-white
-            
-             transform transition-all 
-            duration-[1s] ease-in-out"
+            class="h-[6rem] w-[auto] rounded-[100%] border-transparent border-[0.3rem] hover:border-white transform transition-all duration-[1s] ease-in-out"
         >
     </button> 
     
@@ -152,9 +147,7 @@
             in:fade={{ duration: 500, easing: cubicInOut }}
             out:slide={{ x: 100 }}
 
-            class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
-            bg-sky-400 bg-opacity-90 font-input text-white
-            border-black border-[0.1rem]"
+            class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter bg-sky-400 bg-opacity-90 font-input text-white border-black border-[0.1rem]"
             style="top: {y-10}px; left: {x+30}px;"
         >
         {#if $showProfile}
@@ -199,8 +192,7 @@
                 <div 
                     in:fade={{ duration: 500, easing: cubicInOut }}
                     out:slide={{ x: 100 }}
-                    class="absolute px-8 z-50 py-2 text-center text-[0.88rem] tracking-tighter bg-sky-400 bg-opacity-90 font-input text-white border-black 
-                    border-[0.1rem]"
+                    class="absolute px-8 z-50 py-2 text-center text-[0.88rem] tracking-tighter bg-sky-400 bg-opacity-90 font-input text-white border-black border-[0.1rem]"
                     style="top: {y+50}px; left: {x+50}px;">
                     <p class=""> edit name</p>
                 </div>
@@ -253,9 +245,7 @@
                     <div
                         in:fade={{ duration: 500, easing: cubicInOut }}
                         out:slide={{ x: 100 }}
-                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
-                        bg-rose-400 bg-opacity-90 font-input text-white
-                        border-white border-[0.1rem]"
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter bg-rose-400 bg-opacity-90 font-input text-white border-white border-[0.1rem]"
                         style="top: {y-30}px; right: {50}px;">
                         <p class="">back ⮐</p> 
                     </div>
@@ -276,9 +266,7 @@
                     <div
                         in:fade={{ duration: 500, easing: cubicInOut }}
                         out:slide={{ x: 100 }}
-                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
-                        bg-rose-400 bg-opacity-90 font-input text-white
-                        border-white border-[0.1rem]"
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter bg-rose-400 bg-opacity-90 font-input text-white border-white border-[0.1rem]"
                         style="top: {y-100}px; right: {50}px;">
                         <p class="">change pfp</p> 
                     </div>
@@ -299,9 +287,7 @@
                     <div
                         in:fade={{ duration: 500, easing: cubicInOut }}
                         out:slide={{ x: 100 }}
-                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
-                        bg-rose-400 bg-opacity-90 font-input text-white
-                        border-white border-[0.1rem]"
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter bg-rose-400 bg-opacity-90 font-input text-white border-white border-[0.1rem]"
                         style="top: {y-100}px; right: {50}px;">
                         <p class="">settyingszz</p> 
                     </div>
@@ -321,9 +307,7 @@
                     <div
                         in:fade={{ duration: 500, easing: cubicInOut }}
                         out:slide={{ x: 100 }}
-                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter 
-                        bg-rose-400 bg-opacity-90 font-input text-white
-                        border-white border-[0.1rem]"
+                        class="absolute px-8 py-2 text-center text-[0.88rem] tracking-tighter bg-rose-400 bg-opacity-90 font-input text-white border-white border-[0.1rem]"
                         style="top: {y-160}px; right: {3}rem;">
                         <p class="">signout</p> 
                     </div>

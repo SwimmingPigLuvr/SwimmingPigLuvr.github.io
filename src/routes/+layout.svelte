@@ -40,13 +40,12 @@
 </script>
 
 <!-- nav -->
-<div class="fixed z-10 font-p22 text-white top-3 right-3 lg:right-[20rem] lg:space-x-[4rem] flex 
-flex-row space-x-[1.5rem]">
-  <a href="/" class="glow">Home</a>
-  <a href="/todo" class="glow">Todo</a>
-  <a href="/chatGPT" class="glow">ChatGPT</a>
-  <a href="/shop" data-sveltekit-prefetch class="glow">Shop</a>
-  <a href="/playground" class="glow">playground</a>
+<div class="fixed z-10 font-p22 text-white top-3 right-3 lg:right-[2rem] lg:space-x-[4rem] flex flex-row space-x-[1.5rem]">
+  <a href="/" class="">Home</a>
+  <a href="/todo" class="">Todo</a>
+  <a href="/chatGPT" class="">ChatGPT</a>
+  <a href="/shop" data-sveltekit-prefetch class="">Shop</a>
+  <a href="/playground" class="">playground</a>
 </div>
 <!-- nav -->
 
@@ -68,10 +67,7 @@ flex-row space-x-[1.5rem]">
 <!-- admin reveal -->
 
 <!-- made by swimming, oink oink -->
-<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[18rem] h-[3rem] notes-bg filter grayscale hover:grayscale-0 bg-opacity-50 hover:opacity-100
-  transform transition-all duration-1000 ease-in-out border-white border-[0.1rem]
-   text-lime-500 text-[0.823rem] font-input tracking-tighter 
-  ">
+<div class="z-50 fixed bottom-3 left-1/2 -translate-x-1/2 w-[18rem] h-[3rem] notes-bg filter grayscale hover:grayscale-0 bg-opacity-50 hover:opacity-100 transform transition-all duration-1000 ease-in-out border-white border-[0.1rem] text-lime-500 text-[0.823rem] font-input tracking-tighter">
 <h3 class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
     by 
     <a href="https://twitter.com/swimmingpigluvr" target="_blank" rel="noopener noreferrer">

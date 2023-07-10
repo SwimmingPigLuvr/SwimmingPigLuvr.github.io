@@ -166,10 +166,7 @@
 
      <!-- login button -->
     <div 
-        class="px-5 py-2 bg-white
-          text-bold font-input
-         transform transition-all 
-        duration-[2s] ease-in-out top-3 left-3  fixed">
+        class="px-5 py-2 bg-white text-bold font-input transform transition-all duration-[2s] ease-in-out top-3 left-3  fixed">
         <button on:click={() => showLoginForm.set(!$showLoginForm)}>
             LOGIN
         </button>
@@ -189,9 +186,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div 
             on:click={closeLogin} transition:slide={{  duration: 1000, easing: cubicInOut}} 
-            class="z-10 login-overlay inset-0 hover:cursor-w-resize
-            fixed font-input tracking-tighter text-black shelby-bg 
-            bg-opacity-100 flex flex-col">
+            class="z-10 login-overlay inset-0 hover:cursor-w-resize fixed font-input tracking-tighter text-black shelby-bg bg-opacity-100 flex flex-col">
 
             <!-- login modal -->
             <div 
@@ -249,9 +244,7 @@
                             <button 
                                 on:click={handleSubmit}
                                 type="submit" 
-                                class="border-transparent hover:border-white hover:bg-sky-500 transform 
-                                transition-colors duration-500 ease-in-out border-2 mt-4 px-4 py-2 bg-black 
-                                text-white rounded-md">
+                                class="border-transparent hover:border-white hover:bg-sky-500 transform transition-colors duration-500 ease-in-out border-2 mt-4 px-4 py-2 bg-black text-white rounded-md">
                                     {#if $user}
                                         Login Successful
                                     {:else}

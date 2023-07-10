@@ -247,16 +247,13 @@ function addTodoItem(event: Event) {
     <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
   on:click={closeList} 
-  class="z-10 list-overlay fixed inset-0 bg-black 
-  bg-opacity-60 flex flex-col ">
+  class="z-10 list-overlay fixed inset-0 bg-black bg-opacity-60 flex flex-col ">
   
 <!-- lists modal -->
   <div 
     in:slide={{duration: 700, easing: backOut}} 
     out:slide={{duration: 300, easing: backIn}} 
-    class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 
-    bg-black flex flex-col p-4 space-y-4 items-center font-input 
-    text-xl tracking-tighter text-white">
+    class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 bg-black flex flex-col p-4 space-y-4 items-center font-input text-xl tracking-tighter text-white">
     
     <!-- lists -->
     <ul class="space-y-2">
@@ -289,14 +286,11 @@ function addTodoItem(event: Event) {
 {#if showCreateList}
   <div
     on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
-    class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90
-    flex flex-col"
+    class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90 flex flex-col"
   >
     <div
       transition:slide={{duration: 1000, easing: cubicInOut}}
-      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 
-      border-white border-2 bg-black flex flex-col p-6 space-y-8
-       font-input text-xl tracking-tighter text-white w-[20rem]"
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 border-white border-2 bg-black flex flex-col p-6 space-y-8 font-input text-xl tracking-tighter text-white w-[20rem]"
     >
       <form on:submit|preventDefault={addList} class="flex flex-col space-y-4">
         <label for="List">Create New List</label>
@@ -305,8 +299,7 @@ function addTodoItem(event: Event) {
           bind:value={newList}
           class="text-[1rem] p-2 bg-white bg-opacity-20"
           >
-          <div class="flex flex-row justify-end space-x-6
-            text-[0.81rem] pt-6">
+          <div class="flex flex-row justify-end space-x-6 text-[0.81rem] pt-6">
             <!-- cancel -->
             <button on:click|preventDefault={closeCreateList} class="create-list-overlay">Cancel</button>
             <!-- done -->
@@ -329,16 +322,13 @@ function addTodoItem(event: Event) {
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
     on:click={closeList} 
-    class="z-10 list-overlay fixed inset-0 bg-black 
-    bg-opacity-60 flex flex-col ">
+    class="z-10 list-overlay fixed inset-0 bg-black bg-opacity-60 flex flex-col ">
     
   <!-- lists modal -->
-    <div 
+    <div class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 bg-black flex flex-col p-4 space-y-4 items-center font-input text-xl tracking-tighter text-white"
       in:slide={{duration: 700, easing: backOut}} 
       out:slide={{duration: 300, easing: backIn}} 
-      class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 
-      bg-black flex flex-col p-4 space-y-4 items-center font-input 
-      text-xl tracking-tighter text-white">
+      >
       
       <!-- lists -->
       <ul class="space-y-2">
@@ -371,14 +361,11 @@ function addTodoItem(event: Event) {
   {#if showCreateList}
     <div
       on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
-      class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90
-      flex flex-col"
+      class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90 flex flex-col"
     >
       <div
         transition:slide={{duration: 1000, easing: cubicInOut}}
-        class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 
-        border-white border-2 bg-black flex flex-col p-6 space-y-8
-         font-input text-xl tracking-tighter text-white w-[20rem]"
+        class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 border-white border-2 bg-black flex flex-col p-6 space-y-8 font-input text-xl tracking-tighter text-white w-[20rem]"
       >
         <form on:submit|preventDefault={addList} class="flex flex-col space-y-4">
           <label for="List">Create New List</label>
@@ -387,8 +374,7 @@ function addTodoItem(event: Event) {
             bind:value={newList}
             class="text-[1rem] p-2 bg-white bg-opacity-20"
             >
-            <div class="flex flex-row justify-end space-x-6
-              text-[0.81rem] pt-6">
+            <div class="flex flex-row justify-end space-x-6 text-[0.81rem] pt-6">
               <!-- cancel -->
               <button on:click|preventDefault={closeCreateList} class="create-list-overlay">Cancel</button>
               <!-- done -->
@@ -411,19 +397,14 @@ function addTodoItem(event: Event) {
   <!-- add task -->
     <div 
    
-    class="add-task-button absolute right-3 md:right-[15%] -bottom-[30%]  ">
+    class="add-task-button absolute right-3 md:right-[15%]  -bottom-[4rem] border-transparent hover:border-black bg-white rounded-b-[75%] border-[0.5rem] bg-opacity-90 transform transition-all duration-1000 ease-[backIn] hover:shadow-lg hover:shadow-white">
       
       <form on:submit={addTodoItem} class="w-full m-auto">
         <button
           type="submit"
-          class="px-8 h-[3rem] 
-          font-input text-[1rem]
-          font-bold
-          -tracking-widest bg-black 
-           shadow-inner shadow-black text-white hover:text-sky-300 
-          transform transition-all ease-[backInOut] duration-500 flex items-center justify-center"
+          class="px-[2rem] h-[3rem] font-input text-[1rem] font-bold rounded-b-[100%] -tracking-widest bg-black bg-opacity-50 shadow-inner shadow-black text-white hover:bg-white hover:text-black transform transition-all ease-[backOut] duration-1000 flex items-center justify-center"
         >
-            <p>ADD TASK</p>
+            <p>add task</p>
           
         </button>
       </form>
@@ -436,9 +417,7 @@ function addTodoItem(event: Event) {
 
     <!-- main container -->
     <div
-      class="main-container relative max-h-[80vh] mx-3 md:mx-auto my-[6rem] md:max-w-[70%] flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 
-      yayo-border-blue overflow-y-auto z-0
-      "
+      class="main-container relative max-h-[80vh] mx-3 md:mx-auto my-[6rem] md:max-w-[70%] flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 yayo-border-blue overflow-y-auto z-0"
     >
       <!-- messages -->
 
@@ -502,7 +481,7 @@ function addTodoItem(event: Event) {
               out:slide={{ duration: 1000, easing: backInOut}}
 
 
-              class="flex justify-start flex-wrap overflow-y-auto py-[0.6rem] transition-all transform duration-1000 ease-in-out"
+              class="flex justify-start flex-wrap overflow-y-auto p-[1rem] transition-all transform duration-1000 ease-in-out"
             >
               {#each $todoList as todo, index (todo.id)}
                 <li
@@ -519,9 +498,7 @@ function addTodoItem(event: Event) {
                   }}
                   on:focus={() => (todoHover[index] = true)}
                   on:blur={() => (todoHover[index] = false)}
-                  class="relative w-full filter grayscale hover:grayscale-0 transform transition-all duration-500 ease-[backIn]  md:w-1/2 lg:w-1/3 items-start border-t-white border-r-white border-[2rem] 
-                  bg-sky-800"
-                  >
+                  class="relative w-full filter grayscale hover:grayscale-0 transform transition-all duration-500 ease-[backIn]  md:w-1/2 lg:w-1/3 items-start border-t-white border-r-white border-[2rem] bg-sky-800">
                 <!-- task buttons: favorite, complete, delete, more? -->
                   {#if todoHover[index]}
                     <div
@@ -538,8 +515,7 @@ function addTodoItem(event: Event) {
                         on:blur={() => isHoveringFavorite[index] = false}
                         src="/pfps/remilia-1.png" 
                         alt="remilia corporation logo" 
-                        class="relative w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0
-                        transform transition-all duration-300 ease-in">
+                        class="relative w-[1.75rem] h-[1.75rem] filter sepia invert hover:invert-0 hover:sepia-0 transform transition-all duration-300 ease-in">
                       </button>
                       {#if isHoveringFavorite[index]}
                         <div 
@@ -609,7 +585,7 @@ function addTodoItem(event: Event) {
                       bind:this={inputs[index]}
                       value={todo.title}
                       on:input={(event) => editTodoItem(index, "title", event)}
-                      class="text-[1.43rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
+                      class="text-[0.75rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
                     />
                     <!-- details -->
                     <label for="todoDetails-{index}" class="pt-2">Details</label>
@@ -618,7 +594,7 @@ function addTodoItem(event: Event) {
                       bind:value={todo.details}
                       on:input={(event) =>
                         editTodoItem(index, "details", event)}
-                      class="placeholder:text-white text-[0.888rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"
+                      class="placeholder:text-white text-[0.75rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-40 outline-none hover:bg-sky-300 focus:bg-lime-400 transition-all duration-200"
                     />
                     <!-- date -->
                     <label for="todoDate-{index}" class="pt-2">Date</label>
@@ -627,7 +603,7 @@ function addTodoItem(event: Event) {
                       id="todoDate-{index}"
                       value={todo.date}
                       on:input={(event) => editTodoItem(index, "date", event)}
-                      class="text-[1rem] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200"
+                      class="text-[0.75rem] w-full py-2 px-4 font-input font-bold text-white bg-white bg-opacity-30 outline-none hover:bg-sky-400 focus:bg-lime-500 transition-all duration-200"
                     />
                   </div>
                 </li>
