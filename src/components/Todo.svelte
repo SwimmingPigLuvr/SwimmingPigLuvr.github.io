@@ -217,7 +217,7 @@ function addTodoItem(event: Event) {
   
 
   <!-- container wrapper -->
-  <div class="parent relative z-0">
+  <div class="parent relative z-50">
 
     <!-- list of lists -->
 
@@ -226,8 +226,6 @@ function addTodoItem(event: Event) {
     <!-- each block list of lists (list) -->
     <!-- create new list -->
   <div 
-    on:click={() => showLists = !showLists}
-    on:keydown={(e) => e.key === 'Enter' && (showLists = !showLists)}
     on:mouseenter={() => (listHover = true)}
     on:mouseleave={() => (listHover = false)}
     on:focus={() => (listHover = true)}
@@ -259,15 +257,12 @@ function addTodoItem(event: Event) {
             {/if}
       {#if listHover}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div 
-  on:click={closeList} 
-  class="z-10 list-overlay fixed inset-0 bg-black bg-opacity-60 flex flex-col ">
   
 <!-- lists modal -->
   <div 
     in:slide={{duration: 700, easing: backOut}} 
     out:slide={{duration: 300, easing: backIn}} 
-    class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 bg-black flex flex-col p-4 space-y-4 items-center font-input text-xl tracking-tighter text-white">
+    class="absolute left-1/2 top-[2rem] -translate-x-1/2 w-[16rem] border-white  border-2 bg-black flex flex-col p-4 space-y-4 items-center font-input text-xl tracking-tighter text-white">
     
     <!-- lists -->
     <ul class="space-y-2">
@@ -298,7 +293,7 @@ function addTodoItem(event: Event) {
 
 <!-- create new list modal -->
 {#if showCreateList}
-  <div
+  <button
     on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
     class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90 flex flex-col"
   >
@@ -324,89 +319,14 @@ function addTodoItem(event: Event) {
       </form>
     </div>
     
-  </div>
+  </button>
 {/if}
 <!-- create new list modal -->
 
 
-</div>
     {/if}
   </div>
-  {#if showLists}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div 
-    on:click={closeList} 
-    class="z-10 list-overlay fixed inset-0 bg-black bg-opacity-60 flex flex-col ">
-    
-  <!-- lists modal -->
-    <div class="absolute left-1/2 top-[6rem] -translate-x-1/2 w-[16rem] border-white  border-2 bg-black flex flex-col p-4 space-y-4 items-center font-input text-xl tracking-tighter text-white"
-      in:slide={{duration: 700, easing: backOut}} 
-      out:slide={{duration: 300, easing: backIn}} 
-      >
-      
-      <!-- lists -->
-      <ul class="space-y-2">
-        {#each lists as list (list)} 
-        <div class="flex flex-row item-center justify-center space-x-2">
-          {#if list != currentList}
-          {#if list === 'Favorites'}
-          <img 
-          src="/pfps/remilia-1.png" 
-          alt="remilia corporation logo" 
-          class="w-[1.5rem] h-[1.5rem]">
-          {/if}
-          <option on:click={() => {selectList(list); closeList} } class="list-overlay glow-white" value="">{list}</option>
-          {#if list === 'Favorites'}
-          <img 
-          src="/pfps/remilia-1.png" 
-          alt="remilia corporation logo" 
-          class="w-[1.5rem] h-[1.5rem]">
-          {/if}
-          {/if}
-        </div>
-        {/each}
-      </ul>
-      <!-- create list -->
-        <button on:click={() => showCreateList = !showCreateList} class="glow-white">Create New List</button>
-    </div>
-  <!-- lists modal -->
-
-  <!-- create new list modal -->
-  {#if showCreateList}
-    <div
-      on:click={closeCreateList} transition:fade={{duration: 300, easing: cubicInOut}}
-      class="z-10 create-list-overlay fixed inset-0 bg-black bg-opacity-90 flex flex-col"
-    >
-      <div
-        transition:slide={{duration: 1000, easing: cubicInOut}}
-        class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 border-white border-2 bg-black flex flex-col p-6 space-y-8 font-input text-xl tracking-tighter text-white w-[20rem]"
-      >
-        <form on:submit|preventDefault={addList} class="flex flex-col space-y-4">
-          <label for="List">Create New List</label>
-          <input 
-            type="text" name="List" id="List" placeholder="Very Important Tasks"
-            bind:value={newList}
-            class="text-[1rem] p-2 bg-white bg-opacity-20"
-            >
-            <div class="flex flex-row justify-end space-x-6 text-[0.81rem] pt-6">
-              <!-- cancel -->
-              <button on:click|preventDefault={closeCreateList} class="create-list-overlay">Cancel</button>
-              <!-- done -->
-              <button type="submit" class="text-lime-400">Done</button>
-            </div>
-            
-
-        </form>
-      </div>
-      
-    </div>
-  {/if}
-  <!-- create new list modal -->
-
-
-  </div>
-  {/if}
-   <!-- list of lists -->
+  
 
   <!-- add task -->
     <div 
@@ -431,7 +351,7 @@ function addTodoItem(event: Event) {
 
     <!-- main container -->
     <div
-      class="main-container relative max-h-[80vh] mx-3 md:mx-auto my-[6rem] md:max-w-[70%] flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 yayo-border-blue overflow-y-auto z-0"
+      class="main-container relative max-h-[80vh] mx-3 md:mx-auto my-[6rem] md:max-w-[90%] flex flex-col bg-white border-[0.75rem] md:border-[1rem] md:p-4 yayo-border-blue overflow-y-auto -z-10"
     >
       <!-- messages -->
 
@@ -599,6 +519,7 @@ function addTodoItem(event: Event) {
                       bind:this={inputs[index]}
                       value={todo.title}
                       on:input={(event) => editTodoItem(index, "title", event)}
+                      tabindex='0'
                       class="text-[0.75rem] w-full py-2 px-4 font-input font-bold text-black bg-white bg-opacity-50 outline-none hover:bg-sky-200 focus:bg-lime-300 transition-all duration-200"
                     />
                     <!-- details -->

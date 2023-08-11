@@ -43,9 +43,9 @@
 <div class="fixed z-10 font-p22 text-white top-3 right-3 lg:right-[2rem] lg:space-x-[4rem] flex flex-row space-x-[1.5rem]">
   <a href="/" class="">Home</a>
   <a href="/todo" class="">Todo</a>
-  <a href="/chatGPT" class="">ChatGPT</a>
+  <!-- <a href="/chatGPT" class="">ChatGPT</a> -->
   <a href="/shop" data-sveltekit-prefetch class="">Shop</a>
-  <a href="/playground" class="">playground</a>
+  <a href="/playground" class="">sandbox</a>
 </div>
 <!-- nav -->
 
