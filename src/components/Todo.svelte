@@ -144,18 +144,25 @@ function addTodoItem(event: Event) {
 
   // button hovers
   let todoHover: boolean[] = [];
+
   // listHover
   let listHover = false;
+
   // listCategoryHover
   let isHoveringList: boolean[] = [];
+
   // add task hover
   let addHover = false;
+
   // complete task
   let isHoveringButton: boolean[] = [];
+
   // delete item hover
   let isHoveringDelete: boolean[] = [];
+
   // favoritex item hover
   let isHoveringFavorite: boolean[] = [];
+
   // delete completed item hover
   let isHoveringDeleteCompleted: boolean[] = [];
 
@@ -218,32 +225,39 @@ function addTodoItem(event: Event) {
     <!-- starred -->
     <!-- each block list of lists (list) -->
     <!-- create new list -->
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
     on:click={() => showLists = !showLists}
+    on:keydown={(e) => e.key === 'Enter' && (showLists = !showLists)}
     on:mouseenter={() => (listHover = true)}
     on:mouseleave={() => (listHover = false)}
     on:focus={() => (listHover = true)}
     on:blur={() => (listHover = false)}
+    tabindex="-1"
     class="category absolute font-input font-bold tracking-tighter text-xl px-[2rem] py-[0.3rem]
        right-1/2 translate-x-1/2 border-b-0 border-[0.75rem] border-t-white border-x-slate-400
        -top-[3rem] text-white flex flex-row items-center justify-center
       hover:cursor-pointer bg-black space-x-3 transform transition-all duration-3000 ease-[backIn]
       ">
+
+      <!-- adding remilia logos to the favorites -->
       {#if currentList === 'Favorites'}
-          <img 
-          src="/pfps/remilia-1.png" 
-          alt="remilia corporation logo" 
-          class="w-[1.5rem] h-[1.5rem]">
-          {/if}
-    <h2 class="translate-y-0.5">{currentList}</h2>
-    {#if currentList === 'Favorites'}
-          <img 
-          src="/pfps/remilia-1.png" 
-          alt="remilia corporation logo" 
-          class="w-[1.5rem] h-[1.5rem]">
-          {/if}
-    {#if listHover}
+            <img 
+            src="/pfps/remilia-1.png" 
+            alt="remilia corporation logo" 
+            class="w-[1.5rem] h-[1.5rem]">
+      {/if}
+
+      <!-- current list will show as title -->
+      <h2 class="translate-y-0.5">{currentList}</h2>
+      
+      <!-- adding remilia logos to the favorites -->
+      {#if currentList === 'Favorites'}
+            <img 
+            src="/pfps/remilia-1.png" 
+            alt="remilia corporation logo" 
+            class="w-[1.5rem] h-[1.5rem]">
+            {/if}
+      {#if listHover}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div 
   on:click={closeList} 
